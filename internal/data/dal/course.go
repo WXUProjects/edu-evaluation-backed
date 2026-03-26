@@ -65,6 +65,59 @@ func (c CourseDal) List(page, pageSize int) (*[]model.Course, int64, error) {
 	return &courses, tot, err
 }
 
+// UpdateCourse 更新课程信息
+func (c CourseDal) UpdateCourse(courseID uint, courseName, className string) error {
+	// 检查className是否已被其他课程使用
+	var count int64
+	err := c.db.Model(&model.Course{}).Where("class_name = ? AND id != ?", className, courseID).Count(&count).Error
+	if err != nil {
+		return err
+	}
+	if count > 0 {
+		return errors.New("班级名称已存在")
+	}
+
+	updates := make(map[string]interface{})
+	if courseName != "" {
+		updates["course_name"] = courseName
+	}
+	if className != "" {
+		updates["class_name"] = className
+	}
+
+	if len(updates) == 0 {
+		return nil
+	}
+
+	err = c.db.Model(&model.Course{}).Where("id = ?", courseID).Updates(updates).Error
+	return err
+}
+
+// AddTeachers 添加教师到课程
+func (c CourseDal) AddTeachers(courseID uint, teacherWorkNos []int32) error {
+	// 第一步，清除课程的教师关联
+	err := c.db.Model(&model.Course{Model: gorm.Model{ID: courseID}}).
+		Association("Teachers").
+		Clear()
+	if err != nil {
+		return err
+	}
+	course := model.Course{}
+	course.ID = courseID
+	var teachers []model.Teacher
+	if err := c.db.Where("id IN ?", teacherWorkNos).Find(&teachers).Error; err != nil {
+		return err
+	}
+	if len(teachers) == 0 {
+		return errors.New("未找到匹配的教师信息")
+	}
+	err = c.db.Model(&course).Association("Teachers").Append(&teachers)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func NewCourseDal(data *data.Data) *CourseDal {
 	return &CourseDal{
 		db:  data.DB,

@@ -8,6 +8,7 @@ import (
 	"edu-evaluation-backed/internal/biz/base_info"
 	"edu-evaluation-backed/internal/data/dal"
 	"encoding/json"
+	"errors"
 
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
@@ -39,6 +40,7 @@ func (c CourseService) Detail(ctx context.Context, req *course.GetCourseDetailRe
 			Name:   t.Name,
 			WorkNo: t.WorkNo,
 			Email:  t.Email,
+			Sex:    t.Sex,
 		})
 	}
 	for _, s := range cs.Students {
@@ -52,9 +54,54 @@ func (c CourseService) Detail(ctx context.Context, req *course.GetCourseDetailRe
 	return resp, nil
 }
 
-func (c CourseService) Edit(ctx context.Context, req *course.GetCourseListReq) (*course.GetCourseListResp, error) {
-	//TODO implement me
-	panic("implement me")
+func (c CourseService) Edit(ctx context.Context, req *course.EditCourseReq) (*course.EditCourseResp, error) {
+	// 更新课程基本信息
+	if req.CourseId == 0 {
+		return nil, errors.New("课程ID不能为空")
+	}
+
+	// 更新课程名称和班级名称
+	if req.CourseName != "" || req.ClassName != "" {
+		err := c.courseDal.UpdateCourse(uint(req.CourseId), req.CourseName, req.ClassName)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// 添加教师到课程
+	if len(req.TeacherIds) > 0 {
+		err := c.courseDal.AddTeachers(uint(req.CourseId), req.TeacherIds)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// 查询更新后的课程详情并返回
+	cs, err := c.courseDal.Detail(uint(req.CourseId))
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &course.EditCourseResp{
+		Message: "修改成功",
+		Data: &course.CourseList{
+			Id:          uint32(cs.ID),
+			CourseName:  cs.CourseName,
+			ClassName:   cs.ClassName,
+			TeacherList: make([]*teacher_i.TeacherInfo, 0),
+			Status:      int32(cs.Status),
+		},
+	}
+	for _, t := range cs.Teachers {
+		resp.Data.TeacherList = append(resp.Data.TeacherList, &teacher_i.TeacherInfo{
+			Id:     uint32(t.ID),
+			Name:   t.Name,
+			WorkNo: t.WorkNo,
+			Email:  t.Email,
+			Sex:    t.Sex,
+		})
+	}
+	return resp, nil
 }
 
 func (c CourseService) List(ctx context.Context, req *course.GetCourseListReq) (*course.GetCourseListResp, error) {
@@ -77,8 +124,11 @@ func (c CourseService) List(ctx context.Context, req *course.GetCourseListReq) (
 		})
 		for _, t := range c.Teachers {
 			rsp.Data[len(rsp.Data)-1].TeacherList = append(rsp.Data[len(rsp.Data)-1].TeacherList, &teacher_i.TeacherInfo{
-				Id:   uint32(t.ID),
-				Name: t.Name,
+				Id:     uint32(t.ID),
+				Name:   t.Name,
+				WorkNo: t.WorkNo,
+				Email:  t.Email,
+				Sex:    t.Sex,
 			})
 		}
 	}

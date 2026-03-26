@@ -39,7 +39,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/GetCourseListReq'
+                            $ref: '#/components/schemas/EditCourseReq'
                 required: true
             responses:
                 "200":
@@ -47,7 +47,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetCourseListResp'
+                                $ref: '#/components/schemas/EditCourseResp'
                 default:
                     description: Default error response
                     content:
@@ -106,6 +106,28 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/StudentInfo'
+        EditCourseReq:
+            type: object
+            properties:
+                courseId:
+                    type: integer
+                    format: int32
+                courseName:
+                    type: string
+                className:
+                    type: string
+                teacherIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+        EditCourseResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/CourseList'
         GetCourseDetailResp:
             type: object
             properties:
@@ -113,15 +135,6 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/CourseList'
-        GetCourseListReq:
-            type: object
-            properties:
-                page:
-                    type: integer
-                    format: int32
-                pageSize:
-                    type: integer
-                    format: int32
         GetCourseListResp:
             type: object
             properties:

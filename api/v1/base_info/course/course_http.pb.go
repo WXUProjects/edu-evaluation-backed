@@ -25,7 +25,7 @@ const OperationCourseList = "/api.v1.base_info.course.Course/List"
 
 type CourseHTTPServer interface {
 	Detail(context.Context, *GetCourseDetailReq) (*GetCourseDetailResp, error)
-	Edit(context.Context, *GetCourseListReq) (*GetCourseListResp, error)
+	Edit(context.Context, *EditCourseReq) (*EditCourseResp, error)
 	List(context.Context, *GetCourseListReq) (*GetCourseListResp, error)
 }
 
@@ -76,7 +76,7 @@ func _Course_Detail0_HTTP_Handler(srv CourseHTTPServer) func(ctx http.Context) e
 
 func _Course_Edit0_HTTP_Handler(srv CourseHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetCourseListReq
+		var in EditCourseReq
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -85,20 +85,20 @@ func _Course_Edit0_HTTP_Handler(srv CourseHTTPServer) func(ctx http.Context) err
 		}
 		http.SetOperation(ctx, OperationCourseEdit)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Edit(ctx, req.(*GetCourseListReq))
+			return srv.Edit(ctx, req.(*EditCourseReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetCourseListResp)
+		reply := out.(*EditCourseResp)
 		return ctx.Result(200, reply)
 	}
 }
 
 type CourseHTTPClient interface {
 	Detail(ctx context.Context, req *GetCourseDetailReq, opts ...http.CallOption) (rsp *GetCourseDetailResp, err error)
-	Edit(ctx context.Context, req *GetCourseListReq, opts ...http.CallOption) (rsp *GetCourseListResp, err error)
+	Edit(ctx context.Context, req *EditCourseReq, opts ...http.CallOption) (rsp *EditCourseResp, err error)
 	List(ctx context.Context, req *GetCourseListReq, opts ...http.CallOption) (rsp *GetCourseListResp, err error)
 }
 
@@ -123,8 +123,8 @@ func (c *CourseHTTPClientImpl) Detail(ctx context.Context, in *GetCourseDetailRe
 	return &out, nil
 }
 
-func (c *CourseHTTPClientImpl) Edit(ctx context.Context, in *GetCourseListReq, opts ...http.CallOption) (*GetCourseListResp, error) {
-	var out GetCourseListResp
+func (c *CourseHTTPClientImpl) Edit(ctx context.Context, in *EditCourseReq, opts ...http.CallOption) (*EditCourseResp, error) {
+	var out EditCourseResp
 	pattern := "/api/v1/base-info/course/edit"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationCourseEdit))

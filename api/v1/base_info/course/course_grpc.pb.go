@@ -30,7 +30,7 @@ const (
 type CourseClient interface {
 	List(ctx context.Context, in *GetCourseListReq, opts ...grpc.CallOption) (*GetCourseListResp, error)
 	Detail(ctx context.Context, in *GetCourseDetailReq, opts ...grpc.CallOption) (*GetCourseDetailResp, error)
-	Edit(ctx context.Context, in *GetCourseListReq, opts ...grpc.CallOption) (*GetCourseListResp, error)
+	Edit(ctx context.Context, in *EditCourseReq, opts ...grpc.CallOption) (*EditCourseResp, error)
 }
 
 type courseClient struct {
@@ -61,9 +61,9 @@ func (c *courseClient) Detail(ctx context.Context, in *GetCourseDetailReq, opts 
 	return out, nil
 }
 
-func (c *courseClient) Edit(ctx context.Context, in *GetCourseListReq, opts ...grpc.CallOption) (*GetCourseListResp, error) {
+func (c *courseClient) Edit(ctx context.Context, in *EditCourseReq, opts ...grpc.CallOption) (*EditCourseResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetCourseListResp)
+	out := new(EditCourseResp)
 	err := c.cc.Invoke(ctx, Course_Edit_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (c *courseClient) Edit(ctx context.Context, in *GetCourseListReq, opts ...g
 type CourseServer interface {
 	List(context.Context, *GetCourseListReq) (*GetCourseListResp, error)
 	Detail(context.Context, *GetCourseDetailReq) (*GetCourseDetailResp, error)
-	Edit(context.Context, *GetCourseListReq) (*GetCourseListResp, error)
+	Edit(context.Context, *EditCourseReq) (*EditCourseResp, error)
 	mustEmbedUnimplementedCourseServer()
 }
 
@@ -94,7 +94,7 @@ func (UnimplementedCourseServer) List(context.Context, *GetCourseListReq) (*GetC
 func (UnimplementedCourseServer) Detail(context.Context, *GetCourseDetailReq) (*GetCourseDetailResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Detail not implemented")
 }
-func (UnimplementedCourseServer) Edit(context.Context, *GetCourseListReq) (*GetCourseListResp, error) {
+func (UnimplementedCourseServer) Edit(context.Context, *EditCourseReq) (*EditCourseResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method Edit not implemented")
 }
 func (UnimplementedCourseServer) mustEmbedUnimplementedCourseServer() {}
@@ -155,7 +155,7 @@ func _Course_Detail_Handler(srv interface{}, ctx context.Context, dec func(inter
 }
 
 func _Course_Edit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetCourseListReq)
+	in := new(EditCourseReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func _Course_Edit_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: Course_Edit_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(CourseServer).Edit(ctx, req.(*GetCourseListReq))
+		return srv.(CourseServer).Edit(ctx, req.(*EditCourseReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

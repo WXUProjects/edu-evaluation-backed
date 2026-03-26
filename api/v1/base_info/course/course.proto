@@ -19,7 +19,7 @@ service Course {
       get: "/api/v1/base-info/course/detail",
     };
   }
-  rpc Edit (GetCourseListReq) returns (GetCourseListResp) {
+  rpc Edit (EditCourseReq) returns (EditCourseResp) {
     option (google.api.http) = {
       post: "/api/v1/base-info/course/edit",
       body: "*",
@@ -52,6 +52,18 @@ message GetCourseDetailReq {
 }
 
 message GetCourseDetailResp {
+  string message = 1;
+  CourseList data = 2;
+}
+
+message EditCourseReq {
+  int32 courseId = 1;
+  string courseName = 2;
+  string className = 3;
+  repeated int32 teacherIds = 4;
+}
+
+message EditCourseResp {
   string message = 1;
   CourseList data = 2;
 }
