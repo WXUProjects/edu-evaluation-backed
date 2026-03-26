@@ -1,0 +1,121 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /api/v1/base-info/student/list:
+        get:
+            tags:
+                - Student
+            operationId: Student_List
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: studentNo
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.base_info.student_i.GetStudentListResp'
+    /api/v1/base-info/teacher/list:
+        get:
+            tags:
+                - Teacher
+            operationId: Teacher_List
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: workNo
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.base_info.teacher_i.GetTeacherListResp'
+components:
+    schemas:
+        api.v1.base_info.student_i.GetStudentListResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.base_info.student_i.StudentInfo'
+        api.v1.base_info.student_i.StudentInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                sex:
+                    type: string
+                studentNo:
+                    type: string
+                idCardNo:
+                    type: string
+        api.v1.base_info.teacher_i.GetTeacherListResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.base_info.teacher_i.TeacherInfo'
+        api.v1.base_info.teacher_i.TeacherInfo:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                sex:
+                    type: string
+                workNo:
+                    type: string
+                email:
+                    type: string
+tags:
+    - name: Student
+    - name: Teacher

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.v1.base_info.teacher_i;
+import "google/api/annotations.proto";
+option go_package = "edu-evaluation-backed/api/v1/base_info/teacher;teacher_i";
+option java_multiple_files = true;
+option java_package = "api.v1.base_info";
+
+service Teacher {
+  rpc List (GetTeacherListReq) returns (GetTeacherListResp) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/teacher/list",
+    };
+  }
+}
+
+message TeacherInfo {
+  uint32 id = 1;
+  string name = 2;
+  string sex = 3;
+  string workNo = 4;
+  string email = 5;
+}
+
+message GetTeacherListReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string name = 3;
+  string workNo = 4;
+}
+
+message GetTeacherListResp {
+  string message = 1;
+  repeated TeacherInfo data = 2;
+}

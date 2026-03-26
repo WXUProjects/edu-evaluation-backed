@@ -1,0 +1,13 @@
+server:
+  http:
+    addr: 0.0.0.0:8001
+    timeout: 1s
+data:
+  database:
+    driver: postgres
+    source: host=192.168.1.7 user=cwxu password=cwxu dbname=edu_eva port=35432 sslmode=disable TimeZone=Asia/Shanghai
+  redis:
+    addr: 192.168.1.7
+    password: Sanenchen123
+    read_timeout: 0.2s
+    write_timeout: 0.2s

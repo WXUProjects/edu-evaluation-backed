@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package api.v1.base_info.student_i;
+import "google/api/annotations.proto";
+option go_package = "edu-evaluation-backed/api/v1/base_info/student;student_i";
+option java_multiple_files = true;
+option java_package = "api.v1.base_info";
+
+service Student {
+  rpc List (GetStudentListReq) returns (GetStudentListResp) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/student/list",
+    };
+  }
+}
+
+message StudentInfo {
+  uint32 id = 1;
+  string name = 2;
+  string sex = 3;
+  string studentNo = 4;
+  string idCardNo = 5;
+}
+
+message GetStudentListReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+  string name = 3;
+  string studentNo = 4;
+}
+
+message GetStudentListResp {
+  string message = 1;
+  repeated StudentInfo data = 2;
+}
