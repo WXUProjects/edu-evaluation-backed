@@ -19,15 +19,21 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationTeacherDelete = "/api.v1.base_info.teacher_i.Teacher/Delete"
 const OperationTeacherList = "/api.v1.base_info.teacher_i.Teacher/List"
+const OperationTeacherUpdate = "/api.v1.base_info.teacher_i.Teacher/Update"
 
 type TeacherHTTPServer interface {
+	Delete(context.Context, *DeleteTeacherReq) (*DeleteTeacherResp, error)
 	List(context.Context, *GetTeacherListReq) (*GetTeacherListResp, error)
+	Update(context.Context, *UpdateTeacherReq) (*UpdateTeacherResp, error)
 }
 
 func RegisterTeacherHTTPServer(s *http.Server, srv TeacherHTTPServer) {
 	r := s.Route("/")
 	r.GET("/api/v1/base-info/teacher/list", _Teacher_List0_HTTP_Handler(srv))
+	r.POST("/api/v1/base-info/teacher/update", _Teacher_Update0_HTTP_Handler(srv))
+	r.POST("/api/v1/base-info/teacher/delete", _Teacher_Delete0_HTTP_Handler(srv))
 }
 
 func _Teacher_List0_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) error {
@@ -49,8 +55,54 @@ func _Teacher_List0_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) e
 	}
 }
 
+func _Teacher_Update0_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateTeacherReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTeacherUpdate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Update(ctx, req.(*UpdateTeacherReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateTeacherResp)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Teacher_Delete0_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteTeacherReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTeacherDelete)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Delete(ctx, req.(*DeleteTeacherReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteTeacherResp)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TeacherHTTPClient interface {
+	Delete(ctx context.Context, req *DeleteTeacherReq, opts ...http.CallOption) (rsp *DeleteTeacherResp, err error)
 	List(ctx context.Context, req *GetTeacherListReq, opts ...http.CallOption) (rsp *GetTeacherListResp, err error)
+	Update(ctx context.Context, req *UpdateTeacherReq, opts ...http.CallOption) (rsp *UpdateTeacherResp, err error)
 }
 
 type TeacherHTTPClientImpl struct {
@@ -61,6 +113,19 @@ func NewTeacherHTTPClient(client *http.Client) TeacherHTTPClient {
 	return &TeacherHTTPClientImpl{client}
 }
 
+func (c *TeacherHTTPClientImpl) Delete(ctx context.Context, in *DeleteTeacherReq, opts ...http.CallOption) (*DeleteTeacherResp, error) {
+	var out DeleteTeacherResp
+	pattern := "/api/v1/base-info/teacher/delete"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTeacherDelete))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
 func (c *TeacherHTTPClientImpl) List(ctx context.Context, in *GetTeacherListReq, opts ...http.CallOption) (*GetTeacherListResp, error) {
 	var out GetTeacherListResp
 	pattern := "/api/v1/base-info/teacher/list"
@@ -68,6 +133,19 @@ func (c *TeacherHTTPClientImpl) List(ctx context.Context, in *GetTeacherListReq,
 	opts = append(opts, http.Operation(OperationTeacherList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *TeacherHTTPClientImpl) Update(ctx context.Context, in *UpdateTeacherReq, opts ...http.CallOption) (*UpdateTeacherResp, error) {
+	var out UpdateTeacherResp
+	pattern := "/api/v1/base-info/teacher/update"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTeacherUpdate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -51,3 +51,18 @@ func (s TeacherUseCase) Import(f multipart.File) error {
 	submit(tmp)
 	return nil
 }
+
+// UpdateTeacher 更新教师信息
+func (s TeacherUseCase) UpdateTeacher(id uint, name, sex, workNo, email *string) (*model.Teacher, error) {
+	return s.baseDal.UpdateTeacher(id, name, sex, workNo, email)
+}
+
+// DeleteTeacher 删除教师
+func (s TeacherUseCase) DeleteTeacher(id uint) error {
+	return s.baseDal.DeleteTeacher(id)
+}
+
+// GetTeacherByID 获取教师详情
+func (s TeacherUseCase) GetTeacherByID(id uint) (*model.Teacher, error) {
+	return s.baseDal.GetTeacherByID(id)
+}

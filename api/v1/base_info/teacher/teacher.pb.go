@@ -226,6 +226,222 @@ func (x *GetTeacherListResp) GetTotal() int64 {
 	return 0
 }
 
+type UpdateTeacherReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Sex           *string                `protobuf:"bytes,3,opt,name=sex,proto3,oneof" json:"sex,omitempty"`
+	WorkNo        *string                `protobuf:"bytes,4,opt,name=workNo,proto3,oneof" json:"workNo,omitempty"`
+	Email         *string                `protobuf:"bytes,5,opt,name=email,proto3,oneof" json:"email,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTeacherReq) Reset() {
+	*x = UpdateTeacherReq{}
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTeacherReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTeacherReq) ProtoMessage() {}
+
+func (x *UpdateTeacherReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTeacherReq.ProtoReflect.Descriptor instead.
+func (*UpdateTeacherReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UpdateTeacherReq) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateTeacherReq) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *UpdateTeacherReq) GetSex() string {
+	if x != nil && x.Sex != nil {
+		return *x.Sex
+	}
+	return ""
+}
+
+func (x *UpdateTeacherReq) GetWorkNo() string {
+	if x != nil && x.WorkNo != nil {
+		return *x.WorkNo
+	}
+	return ""
+}
+
+func (x *UpdateTeacherReq) GetEmail() string {
+	if x != nil && x.Email != nil {
+		return *x.Email
+	}
+	return ""
+}
+
+type UpdateTeacherResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Data          *TeacherInfo           `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateTeacherResp) Reset() {
+	*x = UpdateTeacherResp{}
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateTeacherResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateTeacherResp) ProtoMessage() {}
+
+func (x *UpdateTeacherResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateTeacherResp.ProtoReflect.Descriptor instead.
+func (*UpdateTeacherResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UpdateTeacherResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *UpdateTeacherResp) GetData() *TeacherInfo {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type DeleteTeacherReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteTeacherReq) Reset() {
+	*x = DeleteTeacherReq{}
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteTeacherReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTeacherReq) ProtoMessage() {}
+
+func (x *DeleteTeacherReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTeacherReq.ProtoReflect.Descriptor instead.
+func (*DeleteTeacherReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *DeleteTeacherReq) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type DeleteTeacherResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteTeacherResp) Reset() {
+	*x = DeleteTeacherResp{}
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteTeacherResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteTeacherResp) ProtoMessage() {}
+
+func (x *DeleteTeacherResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteTeacherResp.ProtoReflect.Descriptor instead.
+func (*DeleteTeacherResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DeleteTeacherResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_api_v1_base_info_teacher_teacher_proto protoreflect.FileDescriptor
 
 const file_api_v1_base_info_teacher_teacher_proto_rawDesc = "" +
@@ -245,9 +461,28 @@ const file_api_v1_base_info_teacher_teacher_proto_rawDesc = "" +
 	"\x12GetTeacherListResp\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12;\n" +
 	"\x04data\x18\x02 \x03(\v2'.api.v1.base_info.teacher_i.TeacherInfoR\x04data\x12\x14\n" +
-	"\x05total\x18\x03 \x01(\x03R\x05total2\x99\x01\n" +
+	"\x05total\x18\x03 \x01(\x03R\x05total\"\xb0\x01\n" +
+	"\x10UpdateTeacherReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x15\n" +
+	"\x03sex\x18\x03 \x01(\tH\x01R\x03sex\x88\x01\x01\x12\x1b\n" +
+	"\x06workNo\x18\x04 \x01(\tH\x02R\x06workNo\x88\x01\x01\x12\x19\n" +
+	"\x05email\x18\x05 \x01(\tH\x03R\x05email\x88\x01\x01B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_sexB\t\n" +
+	"\a_workNoB\b\n" +
+	"\x06_email\"j\n" +
+	"\x11UpdateTeacherResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12;\n" +
+	"\x04data\x18\x02 \x01(\v2'.api.v1.base_info.teacher_i.TeacherInfoR\x04data\"\"\n" +
+	"\x10DeleteTeacherReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"-\n" +
+	"\x11DeleteTeacherResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xc3\x03\n" +
 	"\aTeacher\x12\x8d\x01\n" +
-	"\x04List\x12-.api.v1.base_info.teacher_i.GetTeacherListReq\x1a..api.v1.base_info.teacher_i.GetTeacherListResp\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/base-info/teacher/listBN\n" +
+	"\x04List\x12-.api.v1.base_info.teacher_i.GetTeacherListReq\x1a..api.v1.base_info.teacher_i.GetTeacherListResp\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/base-info/teacher/list\x12\x92\x01\n" +
+	"\x06Update\x12,.api.v1.base_info.teacher_i.UpdateTeacherReq\x1a-.api.v1.base_info.teacher_i.UpdateTeacherResp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /api/v1/base-info/teacher/update\x12\x92\x01\n" +
+	"\x06Delete\x12,.api.v1.base_info.teacher_i.DeleteTeacherReq\x1a-.api.v1.base_info.teacher_i.DeleteTeacherResp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /api/v1/base-info/teacher/deleteBN\n" +
 	"\x10api.v1.base_infoP\x01Z8edu-evaluation-backed/api/v1/base_info/teacher;teacher_ib\x06proto3"
 
 var (
@@ -262,21 +497,30 @@ func file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP() []byte {
 	return file_api_v1_base_info_teacher_teacher_proto_rawDescData
 }
 
-var file_api_v1_base_info_teacher_teacher_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_api_v1_base_info_teacher_teacher_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_api_v1_base_info_teacher_teacher_proto_goTypes = []any{
 	(*TeacherInfo)(nil),        // 0: api.v1.base_info.teacher_i.TeacherInfo
 	(*GetTeacherListReq)(nil),  // 1: api.v1.base_info.teacher_i.GetTeacherListReq
 	(*GetTeacherListResp)(nil), // 2: api.v1.base_info.teacher_i.GetTeacherListResp
+	(*UpdateTeacherReq)(nil),   // 3: api.v1.base_info.teacher_i.UpdateTeacherReq
+	(*UpdateTeacherResp)(nil),  // 4: api.v1.base_info.teacher_i.UpdateTeacherResp
+	(*DeleteTeacherReq)(nil),   // 5: api.v1.base_info.teacher_i.DeleteTeacherReq
+	(*DeleteTeacherResp)(nil),  // 6: api.v1.base_info.teacher_i.DeleteTeacherResp
 }
 var file_api_v1_base_info_teacher_teacher_proto_depIdxs = []int32{
 	0, // 0: api.v1.base_info.teacher_i.GetTeacherListResp.data:type_name -> api.v1.base_info.teacher_i.TeacherInfo
-	1, // 1: api.v1.base_info.teacher_i.Teacher.List:input_type -> api.v1.base_info.teacher_i.GetTeacherListReq
-	2, // 2: api.v1.base_info.teacher_i.Teacher.List:output_type -> api.v1.base_info.teacher_i.GetTeacherListResp
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 1: api.v1.base_info.teacher_i.UpdateTeacherResp.data:type_name -> api.v1.base_info.teacher_i.TeacherInfo
+	1, // 2: api.v1.base_info.teacher_i.Teacher.List:input_type -> api.v1.base_info.teacher_i.GetTeacherListReq
+	3, // 3: api.v1.base_info.teacher_i.Teacher.Update:input_type -> api.v1.base_info.teacher_i.UpdateTeacherReq
+	5, // 4: api.v1.base_info.teacher_i.Teacher.Delete:input_type -> api.v1.base_info.teacher_i.DeleteTeacherReq
+	2, // 5: api.v1.base_info.teacher_i.Teacher.List:output_type -> api.v1.base_info.teacher_i.GetTeacherListResp
+	4, // 6: api.v1.base_info.teacher_i.Teacher.Update:output_type -> api.v1.base_info.teacher_i.UpdateTeacherResp
+	6, // 7: api.v1.base_info.teacher_i.Teacher.Delete:output_type -> api.v1.base_info.teacher_i.DeleteTeacherResp
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_base_info_teacher_teacher_proto_init() }
@@ -284,13 +528,14 @@ func file_api_v1_base_info_teacher_teacher_proto_init() {
 	if File_api_v1_base_info_teacher_teacher_proto != nil {
 		return
 	}
+	file_api_v1_base_info_teacher_teacher_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_base_info_teacher_teacher_proto_rawDesc), len(file_api_v1_base_info_teacher_teacher_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

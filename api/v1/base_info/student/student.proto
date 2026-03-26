@@ -12,6 +12,18 @@ service Student {
       get: "/api/v1/base-info/student/list",
     };
   }
+  rpc Update (UpdateStudentReq) returns (UpdateStudentResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/student/update",
+      body: "*",
+    };
+  }
+  rpc Delete (DeleteStudentReq) returns (DeleteStudentResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/student/delete",
+      body: "*",
+    };
+  }
 }
 
 message StudentInfo {
@@ -33,4 +45,25 @@ message GetStudentListResp {
   string message = 1;
   repeated StudentInfo data = 2;
   int64 total = 3;
+}
+
+message UpdateStudentReq {
+  uint32 id = 1;
+  optional string name = 2;
+  optional string sex = 3;
+  optional string studentNo = 4;
+  optional string idCardNo = 5;
+}
+
+message UpdateStudentResp {
+  string message = 1;
+  StudentInfo data = 2;
+}
+
+message DeleteStudentReq {
+  uint32 id = 1;
+}
+
+message DeleteStudentResp {
+  string message = 1;
 }

@@ -14,10 +14,11 @@ type Admin struct {
 // Teacher 教师表
 type Teacher struct {
 	gorm.Model
-	Name   string `json:"name" gorm:"size:64;comment:教师姓名"`
-	Sex    string `json:"sex" gorm:"size:1;comment:性别"`
-	WorkNo string `json:"work_no" gorm:"uniqueIndex;size:32;comment:教师工号"`
-	Email  string `json:"email" gorm:"size:64;comment:教师邮箱"`
+	Name    string   `json:"name" gorm:"size:64;comment:教师姓名"`
+	Sex     string   `json:"sex" gorm:"size:1;comment:性别"`
+	WorkNo  string   `json:"work_no" gorm:"uniqueIndex;size:32;comment:教师工号"`
+	Email   string   `json:"email" gorm:"size:64;comment:教师邮箱"`
+	Courses []Course `gorm:"many2many:course_teachers;"`
 }
 
 // EvaluationTask 评价

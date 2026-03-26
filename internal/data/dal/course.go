@@ -118,6 +118,31 @@ func (c CourseDal) AddTeachers(courseID uint, teacherWorkNos []int32) error {
 	return nil
 }
 
+// DeleteCourse 删除课程（清除教师和学生关联后删除）
+func (c CourseDal) DeleteCourse(id uint) error {
+	var course model.Course
+	if err := c.db.First(&course, id).Error; err != nil {
+		return err
+	}
+
+	// 清除教师关联，教师保留
+	if err := c.db.Model(&course).Association("Teachers").Clear(); err != nil {
+		return err
+	}
+
+	// 清除学生关联，学生保留
+	if err := c.db.Model(&course).Association("Students").Clear(); err != nil {
+		return err
+	}
+
+	// 删除课程本身
+	if err := c.db.Delete(&course).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewCourseDal(data *data.Data) *CourseDal {
 	return &CourseDal{
 		db:  data.DB,

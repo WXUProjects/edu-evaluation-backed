@@ -19,7 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Teacher_List_FullMethodName = "/api.v1.base_info.teacher_i.Teacher/List"
+	Teacher_List_FullMethodName   = "/api.v1.base_info.teacher_i.Teacher/List"
+	Teacher_Update_FullMethodName = "/api.v1.base_info.teacher_i.Teacher/Update"
+	Teacher_Delete_FullMethodName = "/api.v1.base_info.teacher_i.Teacher/Delete"
 )
 
 // TeacherClient is the client API for Teacher service.
@@ -27,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TeacherClient interface {
 	List(ctx context.Context, in *GetTeacherListReq, opts ...grpc.CallOption) (*GetTeacherListResp, error)
+	Update(ctx context.Context, in *UpdateTeacherReq, opts ...grpc.CallOption) (*UpdateTeacherResp, error)
+	Delete(ctx context.Context, in *DeleteTeacherReq, opts ...grpc.CallOption) (*DeleteTeacherResp, error)
 }
 
 type teacherClient struct {
@@ -47,11 +51,33 @@ func (c *teacherClient) List(ctx context.Context, in *GetTeacherListReq, opts ..
 	return out, nil
 }
 
+func (c *teacherClient) Update(ctx context.Context, in *UpdateTeacherReq, opts ...grpc.CallOption) (*UpdateTeacherResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateTeacherResp)
+	err := c.cc.Invoke(ctx, Teacher_Update_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *teacherClient) Delete(ctx context.Context, in *DeleteTeacherReq, opts ...grpc.CallOption) (*DeleteTeacherResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteTeacherResp)
+	err := c.cc.Invoke(ctx, Teacher_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TeacherServer is the server API for Teacher service.
 // All implementations must embed UnimplementedTeacherServer
 // for forward compatibility.
 type TeacherServer interface {
 	List(context.Context, *GetTeacherListReq) (*GetTeacherListResp, error)
+	Update(context.Context, *UpdateTeacherReq) (*UpdateTeacherResp, error)
+	Delete(context.Context, *DeleteTeacherReq) (*DeleteTeacherResp, error)
 	mustEmbedUnimplementedTeacherServer()
 }
 
@@ -64,6 +90,12 @@ type UnimplementedTeacherServer struct{}
 
 func (UnimplementedTeacherServer) List(context.Context, *GetTeacherListReq) (*GetTeacherListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedTeacherServer) Update(context.Context, *UpdateTeacherReq) (*UpdateTeacherResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedTeacherServer) Delete(context.Context, *DeleteTeacherReq) (*DeleteTeacherResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedTeacherServer) mustEmbedUnimplementedTeacherServer() {}
 func (UnimplementedTeacherServer) testEmbeddedByValue()                 {}
@@ -104,6 +136,42 @@ func _Teacher_List_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Teacher_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateTeacherReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TeacherServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Teacher_Update_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TeacherServer).Update(ctx, req.(*UpdateTeacherReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Teacher_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTeacherReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TeacherServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Teacher_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TeacherServer).Delete(ctx, req.(*DeleteTeacherReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Teacher_ServiceDesc is the grpc.ServiceDesc for Teacher service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +182,14 @@ var Teacher_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Teacher_List_Handler,
+		},
+		{
+			MethodName: "Update",
+			Handler:    _Teacher_Update_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Teacher_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

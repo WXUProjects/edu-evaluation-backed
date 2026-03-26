@@ -51,3 +51,18 @@ func (s StudentUseCase) ImportStudent(f multipart.File) error {
 	submit(tmp)
 	return nil
 }
+
+// UpdateStudent 更新学生信息
+func (s StudentUseCase) UpdateStudent(id uint, name, sex, studentNo, idCardNo *string) (*model.Student, error) {
+	return s.studentDal.UpdateStudent(id, name, sex, studentNo, idCardNo)
+}
+
+// DeleteStudent 删除学生
+func (s StudentUseCase) DeleteStudent(id uint) error {
+	return s.studentDal.DeleteStudent(id)
+}
+
+// GetStudentByID 获取学生详情
+func (s StudentUseCase) GetStudentByID(id uint) (*model.Student, error) {
+	return s.studentDal.GetStudentByID(id)
+}

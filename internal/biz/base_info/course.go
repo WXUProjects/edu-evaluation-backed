@@ -51,6 +51,11 @@ func (c CourseUseCase) Import(f multipart.File) string {
 	}
 	return iLog
 }
+// DeleteCourse 删除课程
+func (c CourseUseCase) DeleteCourse(id uint) error {
+	return c.courseDal.DeleteCourse(id)
+}
+
 func NewCourseUseCase(courseDal *dal.CourseDal) *CourseUseCase {
 	return &CourseUseCase{
 		courseDal: courseDal,

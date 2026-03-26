@@ -25,6 +25,12 @@ service Course {
       body: "*",
     };
   }
+  rpc Delete (DeleteCourseReq) returns (DeleteCourseResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/course/delete",
+      body: "*",
+    };
+  }
 }
 
 message CourseList {
@@ -66,4 +72,12 @@ message EditCourseReq {
 message EditCourseResp {
   string message = 1;
   CourseList data = 2;
+}
+
+message DeleteCourseReq {
+  uint32 id = 1;
+}
+
+message DeleteCourseResp {
+  string message = 1;
 }

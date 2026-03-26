@@ -226,6 +226,222 @@ func (x *GetStudentListResp) GetTotal() int64 {
 	return 0
 }
 
+type UpdateStudentReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          *string                `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	Sex           *string                `protobuf:"bytes,3,opt,name=sex,proto3,oneof" json:"sex,omitempty"`
+	StudentNo     *string                `protobuf:"bytes,4,opt,name=studentNo,proto3,oneof" json:"studentNo,omitempty"`
+	IdCardNo      *string                `protobuf:"bytes,5,opt,name=idCardNo,proto3,oneof" json:"idCardNo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateStudentReq) Reset() {
+	*x = UpdateStudentReq{}
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateStudentReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateStudentReq) ProtoMessage() {}
+
+func (x *UpdateStudentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateStudentReq.ProtoReflect.Descriptor instead.
+func (*UpdateStudentReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_student_student_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *UpdateStudentReq) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdateStudentReq) GetName() string {
+	if x != nil && x.Name != nil {
+		return *x.Name
+	}
+	return ""
+}
+
+func (x *UpdateStudentReq) GetSex() string {
+	if x != nil && x.Sex != nil {
+		return *x.Sex
+	}
+	return ""
+}
+
+func (x *UpdateStudentReq) GetStudentNo() string {
+	if x != nil && x.StudentNo != nil {
+		return *x.StudentNo
+	}
+	return ""
+}
+
+func (x *UpdateStudentReq) GetIdCardNo() string {
+	if x != nil && x.IdCardNo != nil {
+		return *x.IdCardNo
+	}
+	return ""
+}
+
+type UpdateStudentResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Data          *StudentInfo           `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateStudentResp) Reset() {
+	*x = UpdateStudentResp{}
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateStudentResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateStudentResp) ProtoMessage() {}
+
+func (x *UpdateStudentResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateStudentResp.ProtoReflect.Descriptor instead.
+func (*UpdateStudentResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_student_student_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UpdateStudentResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *UpdateStudentResp) GetData() *StudentInfo {
+	if x != nil {
+		return x.Data
+	}
+	return nil
+}
+
+type DeleteStudentReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteStudentReq) Reset() {
+	*x = DeleteStudentReq{}
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteStudentReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteStudentReq) ProtoMessage() {}
+
+func (x *DeleteStudentReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteStudentReq.ProtoReflect.Descriptor instead.
+func (*DeleteStudentReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_student_student_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *DeleteStudentReq) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type DeleteStudentResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteStudentResp) Reset() {
+	*x = DeleteStudentResp{}
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteStudentResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteStudentResp) ProtoMessage() {}
+
+func (x *DeleteStudentResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_base_info_student_student_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteStudentResp.ProtoReflect.Descriptor instead.
+func (*DeleteStudentResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_base_info_student_student_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *DeleteStudentResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_api_v1_base_info_student_student_proto protoreflect.FileDescriptor
 
 const file_api_v1_base_info_student_student_proto_rawDesc = "" +
@@ -245,9 +461,29 @@ const file_api_v1_base_info_student_student_proto_rawDesc = "" +
 	"\x12GetStudentListResp\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12;\n" +
 	"\x04data\x18\x02 \x03(\v2'.api.v1.base_info.student_i.StudentInfoR\x04data\x12\x14\n" +
-	"\x05total\x18\x03 \x01(\x03R\x05total2\x99\x01\n" +
+	"\x05total\x18\x03 \x01(\x03R\x05total\"\xc2\x01\n" +
+	"\x10UpdateStudentReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x15\n" +
+	"\x03sex\x18\x03 \x01(\tH\x01R\x03sex\x88\x01\x01\x12!\n" +
+	"\tstudentNo\x18\x04 \x01(\tH\x02R\tstudentNo\x88\x01\x01\x12\x1f\n" +
+	"\bidCardNo\x18\x05 \x01(\tH\x03R\bidCardNo\x88\x01\x01B\a\n" +
+	"\x05_nameB\x06\n" +
+	"\x04_sexB\f\n" +
+	"\n" +
+	"_studentNoB\v\n" +
+	"\t_idCardNo\"j\n" +
+	"\x11UpdateStudentResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x12;\n" +
+	"\x04data\x18\x02 \x01(\v2'.api.v1.base_info.student_i.StudentInfoR\x04data\"\"\n" +
+	"\x10DeleteStudentReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"-\n" +
+	"\x11DeleteStudentResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xc3\x03\n" +
 	"\aStudent\x12\x8d\x01\n" +
-	"\x04List\x12-.api.v1.base_info.student_i.GetStudentListReq\x1a..api.v1.base_info.student_i.GetStudentListResp\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/base-info/student/listBN\n" +
+	"\x04List\x12-.api.v1.base_info.student_i.GetStudentListReq\x1a..api.v1.base_info.student_i.GetStudentListResp\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/base-info/student/list\x12\x92\x01\n" +
+	"\x06Update\x12,.api.v1.base_info.student_i.UpdateStudentReq\x1a-.api.v1.base_info.student_i.UpdateStudentResp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /api/v1/base-info/student/update\x12\x92\x01\n" +
+	"\x06Delete\x12,.api.v1.base_info.student_i.DeleteStudentReq\x1a-.api.v1.base_info.student_i.DeleteStudentResp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /api/v1/base-info/student/deleteBN\n" +
 	"\x10api.v1.base_infoP\x01Z8edu-evaluation-backed/api/v1/base_info/student;student_ib\x06proto3"
 
 var (
@@ -262,21 +498,30 @@ func file_api_v1_base_info_student_student_proto_rawDescGZIP() []byte {
 	return file_api_v1_base_info_student_student_proto_rawDescData
 }
 
-var file_api_v1_base_info_student_student_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_api_v1_base_info_student_student_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_api_v1_base_info_student_student_proto_goTypes = []any{
 	(*StudentInfo)(nil),        // 0: api.v1.base_info.student_i.StudentInfo
 	(*GetStudentListReq)(nil),  // 1: api.v1.base_info.student_i.GetStudentListReq
 	(*GetStudentListResp)(nil), // 2: api.v1.base_info.student_i.GetStudentListResp
+	(*UpdateStudentReq)(nil),   // 3: api.v1.base_info.student_i.UpdateStudentReq
+	(*UpdateStudentResp)(nil),  // 4: api.v1.base_info.student_i.UpdateStudentResp
+	(*DeleteStudentReq)(nil),   // 5: api.v1.base_info.student_i.DeleteStudentReq
+	(*DeleteStudentResp)(nil),  // 6: api.v1.base_info.student_i.DeleteStudentResp
 }
 var file_api_v1_base_info_student_student_proto_depIdxs = []int32{
 	0, // 0: api.v1.base_info.student_i.GetStudentListResp.data:type_name -> api.v1.base_info.student_i.StudentInfo
-	1, // 1: api.v1.base_info.student_i.Student.List:input_type -> api.v1.base_info.student_i.GetStudentListReq
-	2, // 2: api.v1.base_info.student_i.Student.List:output_type -> api.v1.base_info.student_i.GetStudentListResp
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // 1: api.v1.base_info.student_i.UpdateStudentResp.data:type_name -> api.v1.base_info.student_i.StudentInfo
+	1, // 2: api.v1.base_info.student_i.Student.List:input_type -> api.v1.base_info.student_i.GetStudentListReq
+	3, // 3: api.v1.base_info.student_i.Student.Update:input_type -> api.v1.base_info.student_i.UpdateStudentReq
+	5, // 4: api.v1.base_info.student_i.Student.Delete:input_type -> api.v1.base_info.student_i.DeleteStudentReq
+	2, // 5: api.v1.base_info.student_i.Student.List:output_type -> api.v1.base_info.student_i.GetStudentListResp
+	4, // 6: api.v1.base_info.student_i.Student.Update:output_type -> api.v1.base_info.student_i.UpdateStudentResp
+	6, // 7: api.v1.base_info.student_i.Student.Delete:output_type -> api.v1.base_info.student_i.DeleteStudentResp
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_base_info_student_student_proto_init() }
@@ -284,13 +529,14 @@ func file_api_v1_base_info_student_student_proto_init() {
 	if File_api_v1_base_info_student_student_proto != nil {
 		return
 	}
+	file_api_v1_base_info_student_student_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_base_info_student_student_proto_rawDesc), len(file_api_v1_base_info_student_student_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

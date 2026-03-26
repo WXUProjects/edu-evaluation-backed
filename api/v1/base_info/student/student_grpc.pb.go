@@ -19,7 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Student_List_FullMethodName = "/api.v1.base_info.student_i.Student/List"
+	Student_List_FullMethodName   = "/api.v1.base_info.student_i.Student/List"
+	Student_Update_FullMethodName = "/api.v1.base_info.student_i.Student/Update"
+	Student_Delete_FullMethodName = "/api.v1.base_info.student_i.Student/Delete"
 )
 
 // StudentClient is the client API for Student service.
@@ -27,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StudentClient interface {
 	List(ctx context.Context, in *GetStudentListReq, opts ...grpc.CallOption) (*GetStudentListResp, error)
+	Update(ctx context.Context, in *UpdateStudentReq, opts ...grpc.CallOption) (*UpdateStudentResp, error)
+	Delete(ctx context.Context, in *DeleteStudentReq, opts ...grpc.CallOption) (*DeleteStudentResp, error)
 }
 
 type studentClient struct {
@@ -47,11 +51,33 @@ func (c *studentClient) List(ctx context.Context, in *GetStudentListReq, opts ..
 	return out, nil
 }
 
+func (c *studentClient) Update(ctx context.Context, in *UpdateStudentReq, opts ...grpc.CallOption) (*UpdateStudentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateStudentResp)
+	err := c.cc.Invoke(ctx, Student_Update_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *studentClient) Delete(ctx context.Context, in *DeleteStudentReq, opts ...grpc.CallOption) (*DeleteStudentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteStudentResp)
+	err := c.cc.Invoke(ctx, Student_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StudentServer is the server API for Student service.
 // All implementations must embed UnimplementedStudentServer
 // for forward compatibility.
 type StudentServer interface {
 	List(context.Context, *GetStudentListReq) (*GetStudentListResp, error)
+	Update(context.Context, *UpdateStudentReq) (*UpdateStudentResp, error)
+	Delete(context.Context, *DeleteStudentReq) (*DeleteStudentResp, error)
 	mustEmbedUnimplementedStudentServer()
 }
 
@@ -64,6 +90,12 @@ type UnimplementedStudentServer struct{}
 
 func (UnimplementedStudentServer) List(context.Context, *GetStudentListReq) (*GetStudentListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedStudentServer) Update(context.Context, *UpdateStudentReq) (*UpdateStudentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Update not implemented")
+}
+func (UnimplementedStudentServer) Delete(context.Context, *DeleteStudentReq) (*DeleteStudentResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedStudentServer) mustEmbedUnimplementedStudentServer() {}
 func (UnimplementedStudentServer) testEmbeddedByValue()                 {}
@@ -104,6 +136,42 @@ func _Student_List_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Student_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStudentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StudentServer).Update(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Student_Update_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StudentServer).Update(ctx, req.(*UpdateStudentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Student_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteStudentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StudentServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Student_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StudentServer).Delete(ctx, req.(*DeleteStudentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Student_ServiceDesc is the grpc.ServiceDesc for Student service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +182,14 @@ var Student_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "List",
 			Handler:    _Student_List_Handler,
+		},
+		{
+			MethodName: "Update",
+			Handler:    _Student_Update_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _Student_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

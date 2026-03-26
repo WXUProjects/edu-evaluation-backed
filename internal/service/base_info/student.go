@@ -58,6 +58,38 @@ func (s StudentService) Import(ctx http.Context) error {
 	return nil
 }
 
+func (s StudentService) Update(ctx context.Context, req *baseinfo2.UpdateStudentReq) (*baseinfo2.UpdateStudentResp, error) {
+	// 调用biz层更新
+	student, err := s.studentUc.UpdateStudent(uint(req.Id), req.Name, req.Sex, req.StudentNo, req.IdCardNo)
+	if err != nil {
+		return nil, err
+	}
+
+	// 返回更新后的数据
+	return &baseinfo2.UpdateStudentResp{
+		Message: "修改成功",
+		Data: &baseinfo2.StudentInfo{
+			Id:        uint32(student.ID),
+			Name:      student.Name,
+			Sex:       student.Sex,
+			StudentNo: student.StudentNo,
+			IdCardNo:  student.IdCardNo,
+		},
+	}, nil
+}
+
+func (s StudentService) Delete(ctx context.Context, req *baseinfo2.DeleteStudentReq) (*baseinfo2.DeleteStudentResp, error) {
+	// 调用biz层删除
+	err := s.studentUc.DeleteStudent(uint(req.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &baseinfo2.DeleteStudentResp{
+		Message: "删除成功",
+	}, nil
+}
+
 func NewStudentService(studentUc *base_info.StudentUseCase, baseDal *dal.BaseInfoDal) *StudentService {
 	return &StudentService{studentUc: studentUc, baseDal: baseDal}
 }

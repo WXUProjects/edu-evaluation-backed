@@ -154,6 +154,18 @@ func (c CourseService) Import(ctx http.Context) error {
 	return nil
 }
 
+func (c CourseService) Delete(ctx context.Context, req *course.DeleteCourseReq) (*course.DeleteCourseResp, error) {
+	// 调用biz层删除
+	err := c.courseUC.DeleteCourse(uint(req.Id))
+	if err != nil {
+		return nil, err
+	}
+
+	return &course.DeleteCourseResp{
+		Message: "删除成功",
+	}, nil
+}
+
 func NewCourseService(courseDal *dal.CourseDal, courseUC *base_info.CourseUseCase) *CourseService {
 	return &CourseService{
 		courseDal: courseDal,

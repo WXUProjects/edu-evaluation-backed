@@ -12,6 +12,18 @@ service Teacher {
       get: "/api/v1/base-info/teacher/list",
     };
   }
+  rpc Update (UpdateTeacherReq) returns (UpdateTeacherResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/teacher/update",
+      body: "*",
+    };
+  }
+  rpc Delete (DeleteTeacherReq) returns (DeleteTeacherResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/teacher/delete",
+      body: "*",
+    };
+  }
 }
 
 message TeacherInfo {
@@ -33,4 +45,25 @@ message GetTeacherListResp {
   string message = 1;
   repeated TeacherInfo data = 2;
   int64 total = 3;
+}
+
+message UpdateTeacherReq {
+  uint32 id = 1;
+  optional string name = 2;
+  optional string sex = 3;
+  optional string workNo = 4;
+  optional string email = 5;
+}
+
+message UpdateTeacherResp {
+  string message = 1;
+  TeacherInfo data = 2;
+}
+
+message DeleteTeacherReq {
+  uint32 id = 1;
+}
+
+message DeleteTeacherResp {
+  string message = 1;
 }

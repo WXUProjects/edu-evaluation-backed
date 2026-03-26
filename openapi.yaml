@@ -3,43 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: Course API
+    title: Teacher API
     version: 0.0.1
 paths:
-    /api/v1/base-info/course/detail:
-        get:
-            tags:
-                - Course
-            operationId: Course_Detail
-            parameters:
-                - name: courseId
-                  in: query
-                  schema:
-                    type: integer
-                    format: int32
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetCourseDetailResp'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /api/v1/base-info/course/edit:
+    /api/v1/base-info/teacher/delete:
         post:
             tags:
-                - Course
-            operationId: Course_Edit
+                - Teacher
+            operationId: Teacher_Delete
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/EditCourseReq'
+                            $ref: '#/components/schemas/DeleteTeacherReq'
                 required: true
             responses:
                 "200":
@@ -47,18 +23,18 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/EditCourseResp'
+                                $ref: '#/components/schemas/DeleteTeacherResp'
                 default:
                     description: Default error response
                     content:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /api/v1/base-info/course/list:
+    /api/v1/base-info/teacher/list:
         get:
             tags:
-                - Course
-            operationId: Course_List
+                - Teacher
+            operationId: Teacher_List
             parameters:
                 - name: page
                   in: query
@@ -70,13 +46,45 @@ paths:
                   schema:
                     type: integer
                     format: int32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: workNo
+                  in: query
+                  schema:
+                    type: string
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/GetCourseListResp'
+                                $ref: '#/components/schemas/GetTeacherListResp'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/base-info/teacher/update:
+        post:
+            tags:
+                - Teacher
+            operationId: Teacher_Update
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateTeacherReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateTeacherResp'
                 default:
                     description: Default error response
                     content:
@@ -85,65 +93,26 @@ paths:
                                 $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CourseList:
+        DeleteTeacherReq:
             type: object
             properties:
                 id:
                     type: integer
                     format: uint32
-                courseName:
+        DeleteTeacherResp:
+            type: object
+            properties:
+                message:
                     type: string
-                className:
+        GetTeacherListResp:
+            type: object
+            properties:
+                message:
                     type: string
-                status:
-                    type: integer
-                    format: int32
-                teacherList:
+                data:
                     type: array
                     items:
                         $ref: '#/components/schemas/TeacherInfo'
-                studentList:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/StudentInfo'
-        EditCourseReq:
-            type: object
-            properties:
-                courseId:
-                    type: integer
-                    format: int32
-                courseName:
-                    type: string
-                className:
-                    type: string
-                teacherIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: int32
-        EditCourseResp:
-            type: object
-            properties:
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/CourseList'
-        GetCourseDetailResp:
-            type: object
-            properties:
-                message:
-                    type: string
-                data:
-                    $ref: '#/components/schemas/CourseList'
-        GetCourseListResp:
-            type: object
-            properties:
-                message:
-                    type: string
-                data:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/CourseList'
                 total:
                     type: string
         GoogleProtobufAny:
@@ -170,20 +139,6 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
-        StudentInfo:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint32
-                name:
-                    type: string
-                sex:
-                    type: string
-                studentNo:
-                    type: string
-                idCardNo:
-                    type: string
         TeacherInfo:
             type: object
             properties:
@@ -198,5 +153,26 @@ components:
                     type: string
                 email:
                     type: string
+        UpdateTeacherReq:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                sex:
+                    type: string
+                workNo:
+                    type: string
+                email:
+                    type: string
+        UpdateTeacherResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/TeacherInfo'
 tags:
-    - name: Course
+    - name: Teacher
