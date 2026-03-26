@@ -1,6 +1,7 @@
 package server
 
 import (
+	"edu-evaluation-backed/api/v1/base_info/course"
 	"edu-evaluation-backed/api/v1/base_info/student"
 	"edu-evaluation-backed/api/v1/base_info/teacher"
 	"edu-evaluation-backed/internal/conf"
@@ -40,5 +41,6 @@ func NewHTTPServer(c *conf.Server,
 	b.POST("/course/import", courseService.Import)
 	student_i.RegisterStudentHTTPServer(srv, studentService)
 	teacher_i.RegisterTeacherHTTPServer(srv, teacherService)
+	course.RegisterCourseHTTPServer(srv, courseService)
 	return srv
 }

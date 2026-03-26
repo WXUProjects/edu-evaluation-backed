@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.9.2
 // - protoc             v6.33.1
-// source: v1/base_info/student/student.proto
+// source: api/v1/base_info/student/student.proto
 
 package student_i
 

@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.9.2
 // - protoc             v6.33.1
-// source: v1/base_info/teacher/teacher.proto
+// source: api/v1/base_info/teacher/teacher.proto
 
 package teacher_i
 
@@ -27,10 +27,10 @@ type TeacherHTTPServer interface {
 
 func RegisterTeacherHTTPServer(s *http.Server, srv TeacherHTTPServer) {
 	r := s.Route("/")
-	r.GET("/api/v1/base-info/teacher/list", _Teacher_List1_HTTP_Handler(srv))
+	r.GET("/api/v1/base-info/teacher/list", _Teacher_List0_HTTP_Handler(srv))
 }
 
-func _Teacher_List1_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) error {
+func _Teacher_List0_HTTP_Handler(srv TeacherHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetTeacherListReq
 		if err := ctx.BindQuery(&in); err != nil {

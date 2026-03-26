@@ -17,13 +17,14 @@ type TeacherService struct {
 
 func (s TeacherService) List(ctx context.Context, req *teacher_i.GetTeacherListReq) (*teacher_i.GetTeacherListResp, error) {
 	// 包含分页 模糊查询功能
-	teacherList, err := s.baseDal.QueryTeacher(int(req.Page), int(req.PageSize), req.WorkNo, req.Name)
+	teacherList, tot, err := s.baseDal.QueryTeacher(int(req.Page), int(req.PageSize), req.WorkNo, req.Name)
 	if err != nil {
 		return nil, err
 	}
 	res := &teacher_i.GetTeacherListResp{
 		Message: "success",
 		Data:    make([]*teacher_i.TeacherInfo, 0),
+		Total:   tot,
 	}
 	for _, v := range *teacherList {
 		res.Data = append(res.Data, &teacher_i.TeacherInfo{

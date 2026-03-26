@@ -17,13 +17,14 @@ type StudentService struct {
 
 func (s StudentService) List(ctx context.Context, req *baseinfo2.GetStudentListReq) (*baseinfo2.GetStudentListResp, error) {
 	// 包含分页 模糊查询功能
-	studentList, err := s.baseDal.QueryStudent(int(req.Page), int(req.PageSize), req.StudentNo, req.Name)
+	studentList, tot, err := s.baseDal.QueryStudent(int(req.Page), int(req.PageSize), req.StudentNo, req.Name)
 	if err != nil {
 		return nil, err
 	}
 	res := &baseinfo2.GetStudentListResp{
 		Message: "success",
 		Data:    make([]*baseinfo2.StudentInfo, 0),
+		Total:   tot,
 	}
 	for _, v := range *studentList {
 		res.Data = append(res.Data, &baseinfo2.StudentInfo{

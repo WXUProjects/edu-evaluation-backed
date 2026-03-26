@@ -42,7 +42,7 @@ func (d *BaseInfoDal) InsertStudent(students []*model.Student) error {
 		}).Create(students).Error
 }
 
-func (d *BaseInfoDal) QueryStudent(page, size int, studentNo, name string) (*[]model.Student, error) {
+func (d *BaseInfoDal) QueryStudent(page, size int, studentNo, name string) (*[]model.Student, int64, error) {
 	var modelStudent []model.Student
 	page, size = pageNumHandle(page, size)
 	baseQ := d.db.Limit(size).Offset((page - 1) * size)
@@ -52,8 +52,9 @@ func (d *BaseInfoDal) QueryStudent(page, size int, studentNo, name string) (*[]m
 	if name != "" {
 		baseQ = baseQ.Where("name like ?", "%"+name+"%")
 	}
-	baseQ.Order("id desc").Find(&modelStudent)
-	return &modelStudent, baseQ.Error
+	var tot int64
+	baseQ.Order("id desc").Find(&modelStudent).Count(&tot)
+	return &modelStudent, tot, baseQ.Error
 }
 
 func (d *BaseInfoDal) InsertTeacher(teachers []*model.Teacher) error {
@@ -64,7 +65,7 @@ func (d *BaseInfoDal) InsertTeacher(teachers []*model.Teacher) error {
 		}).Create(teachers).Error
 }
 
-func (d *BaseInfoDal) QueryTeacher(page, size int, workNo, name string) (*[]model.Teacher, error) {
+func (d *BaseInfoDal) QueryTeacher(page, size int, workNo, name string) (*[]model.Teacher, int64, error) {
 	var modelTeacher []model.Teacher
 	page, size = pageNumHandle(page, size)
 	baseQ := d.db.Limit(size).Offset((page - 1) * size)
@@ -74,6 +75,7 @@ func (d *BaseInfoDal) QueryTeacher(page, size int, workNo, name string) (*[]mode
 	if name != "" {
 		baseQ = baseQ.Where("name like ?", "%"+name+"%")
 	}
-	baseQ.Order("id desc").Find(&modelTeacher)
-	return &modelTeacher, baseQ.Error
+	var tot int64
+	baseQ.Order("id desc").Find(&modelTeacher).Count(&tot)
+	return &modelTeacher, tot, baseQ.Error
 }

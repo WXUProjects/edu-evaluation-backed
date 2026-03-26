@@ -43,6 +43,21 @@ func (c CourseDal) AddStudent(courseID uint, studentNos []string) error {
 	}
 	return nil
 }
+
+// List 获取课程列表
+func (c CourseDal) List(page, pageSize int) (*[]model.Course, int64, error) {
+	if page == 0 {
+		page = 1
+	}
+	if pageSize == 0 {
+		pageSize = 10
+	}
+	var courses []model.Course
+	var tot int64
+	err := c.db.Limit(pageSize).Preload("Teachers").Offset((page - 1) * pageSize).Find(&courses).Count(&tot).Error
+	return &courses, tot, err
+}
+
 func NewCourseDal(data *data.Data) *CourseDal {
 	return &CourseDal{
 		db:  data.DB,

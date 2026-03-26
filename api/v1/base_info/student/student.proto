@@ -32,4 +32,5 @@ message GetStudentListReq {
 message GetStudentListResp {
   string message = 1;
   repeated StudentInfo data = 2;
+  int64 total = 3;
 }

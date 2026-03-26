@@ -17,6 +17,7 @@ type courseItem struct {
 	className  string
 }
 
+// Import 导入课程
 func (c CourseUseCase) Import(f multipart.File) string {
 	list, err := excelize.OpenReader(f)
 	if err != nil {

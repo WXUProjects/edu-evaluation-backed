@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.6.1
 // - protoc             v6.33.1
-// source: v1/base_info/teacher/teacher.proto
+// source: api/v1/base_info/teacher/teacher.proto
 
 package teacher_i
 
@@ -117,5 +117,5 @@ var Teacher_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "v1/base_info/teacher/teacher.proto",
+	Metadata: "api/v1/base_info/teacher/teacher.proto",
 }

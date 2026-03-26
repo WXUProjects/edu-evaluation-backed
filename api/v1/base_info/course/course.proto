@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package api.v1.base_info.course;
+import "google/api/annotations.proto";
+import "api/v1/base_info/teacher/teacher.proto";
+option go_package = "edu-evaluation-backed/api/v1/base_info/course;course";
+option java_multiple_files = true;
+option java_package = "api.v1.base_info.course";
+
+service Course {
+  rpc List (GetCourseListReq) returns (GetCourseListResp) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/course/list",
+    };
+  }
+  rpc Detail (GetCourseListReq) returns (GetCourseListResp) {
+    option (google.api.http) = {
+      get: "/api/v1/base-info/course/detail",
+    };
+  }
+  rpc ChangeStatus (GetCourseListReq) returns (GetCourseListResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/course/change-status",
+      body: "*",
+    };
+  }
+  rpc Edit (GetCourseListReq) returns (GetCourseListResp) {
+    option (google.api.http) = {
+      post: "/api/v1/base-info/course/edit",
+      body: "*",
+    };
+  }
+}
+
+message CourseList {
+  uint32 id = 1;
+  string courseName = 2;
+  string className = 3;
+  repeated api.v1.base_info.teacher_i.TeacherInfo teacherList = 4;
+}
+
+message GetCourseListReq {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message GetCourseListResp {
+  string message = 1;
+  repeated CourseList data = 2;
+  int64 total = 3;
+}

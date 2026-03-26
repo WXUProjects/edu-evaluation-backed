@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        v6.33.1
-// source: v1/base_info/teacher/teacher.proto
+// source: api/v1/base_info/teacher/teacher.proto
 
 package teacher_i
 
@@ -35,7 +35,7 @@ type TeacherInfo struct {
 
 func (x *TeacherInfo) Reset() {
 	*x = TeacherInfo{}
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[0]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +47,7 @@ func (x *TeacherInfo) String() string {
 func (*TeacherInfo) ProtoMessage() {}
 
 func (x *TeacherInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[0]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +60,7 @@ func (x *TeacherInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TeacherInfo.ProtoReflect.Descriptor instead.
 func (*TeacherInfo) Descriptor() ([]byte, []int) {
-	return file_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{0}
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *TeacherInfo) GetId() uint32 {
@@ -110,7 +110,7 @@ type GetTeacherListReq struct {
 
 func (x *GetTeacherListReq) Reset() {
 	*x = GetTeacherListReq{}
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[1]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -122,7 +122,7 @@ func (x *GetTeacherListReq) String() string {
 func (*GetTeacherListReq) ProtoMessage() {}
 
 func (x *GetTeacherListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[1]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -135,7 +135,7 @@ func (x *GetTeacherListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTeacherListReq.ProtoReflect.Descriptor instead.
 func (*GetTeacherListReq) Descriptor() ([]byte, []int) {
-	return file_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{1}
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetTeacherListReq) GetPage() int32 {
@@ -170,13 +170,14 @@ type GetTeacherListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
 	Data          []*TeacherInfo         `protobuf:"bytes,2,rep,name=data,proto3" json:"data,omitempty"`
+	Total         int64                  `protobuf:"varint,3,opt,name=total,proto3" json:"total,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *GetTeacherListResp) Reset() {
 	*x = GetTeacherListResp{}
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[2]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -188,7 +189,7 @@ func (x *GetTeacherListResp) String() string {
 func (*GetTeacherListResp) ProtoMessage() {}
 
 func (x *GetTeacherListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_base_info_teacher_teacher_proto_msgTypes[2]
+	mi := &file_api_v1_base_info_teacher_teacher_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -201,7 +202,7 @@ func (x *GetTeacherListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTeacherListResp.ProtoReflect.Descriptor instead.
 func (*GetTeacherListResp) Descriptor() ([]byte, []int) {
-	return file_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{2}
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetTeacherListResp) GetMessage() string {
@@ -218,11 +219,18 @@ func (x *GetTeacherListResp) GetData() []*TeacherInfo {
 	return nil
 }
 
-var File_v1_base_info_teacher_teacher_proto protoreflect.FileDescriptor
+func (x *GetTeacherListResp) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
 
-const file_v1_base_info_teacher_teacher_proto_rawDesc = "" +
+var File_api_v1_base_info_teacher_teacher_proto protoreflect.FileDescriptor
+
+const file_api_v1_base_info_teacher_teacher_proto_rawDesc = "" +
 	"\n" +
-	"\"v1/base_info/teacher/teacher.proto\x12\x1aapi.v1.base_info.teacher_i\x1a\x1cgoogle/api/annotations.proto\"q\n" +
+	"&api/v1/base_info/teacher/teacher.proto\x12\x1aapi.v1.base_info.teacher_i\x1a\x1cgoogle/api/annotations.proto\"q\n" +
 	"\vTeacherInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
@@ -233,33 +241,34 @@ const file_v1_base_info_teacher_teacher_proto_rawDesc = "" +
 	"\x04page\x18\x01 \x01(\x05R\x04page\x12\x1a\n" +
 	"\bpageSize\x18\x02 \x01(\x05R\bpageSize\x12\x12\n" +
 	"\x04name\x18\x03 \x01(\tR\x04name\x12\x16\n" +
-	"\x06workNo\x18\x04 \x01(\tR\x06workNo\"k\n" +
+	"\x06workNo\x18\x04 \x01(\tR\x06workNo\"\x81\x01\n" +
 	"\x12GetTeacherListResp\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage\x12;\n" +
-	"\x04data\x18\x02 \x03(\v2'.api.v1.base_info.teacher_i.TeacherInfoR\x04data2\x99\x01\n" +
+	"\x04data\x18\x02 \x03(\v2'.api.v1.base_info.teacher_i.TeacherInfoR\x04data\x12\x14\n" +
+	"\x05total\x18\x03 \x01(\x03R\x05total2\x99\x01\n" +
 	"\aTeacher\x12\x8d\x01\n" +
 	"\x04List\x12-.api.v1.base_info.teacher_i.GetTeacherListReq\x1a..api.v1.base_info.teacher_i.GetTeacherListResp\"&\x82\xd3\xe4\x93\x02 \x12\x1e/api/v1/base-info/teacher/listBN\n" +
 	"\x10api.v1.base_infoP\x01Z8edu-evaluation-backed/api/v1/base_info/teacher;teacher_ib\x06proto3"
 
 var (
-	file_v1_base_info_teacher_teacher_proto_rawDescOnce sync.Once
-	file_v1_base_info_teacher_teacher_proto_rawDescData []byte
+	file_api_v1_base_info_teacher_teacher_proto_rawDescOnce sync.Once
+	file_api_v1_base_info_teacher_teacher_proto_rawDescData []byte
 )
 
-func file_v1_base_info_teacher_teacher_proto_rawDescGZIP() []byte {
-	file_v1_base_info_teacher_teacher_proto_rawDescOnce.Do(func() {
-		file_v1_base_info_teacher_teacher_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_base_info_teacher_teacher_proto_rawDesc), len(file_v1_base_info_teacher_teacher_proto_rawDesc)))
+func file_api_v1_base_info_teacher_teacher_proto_rawDescGZIP() []byte {
+	file_api_v1_base_info_teacher_teacher_proto_rawDescOnce.Do(func() {
+		file_api_v1_base_info_teacher_teacher_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_api_v1_base_info_teacher_teacher_proto_rawDesc), len(file_api_v1_base_info_teacher_teacher_proto_rawDesc)))
 	})
-	return file_v1_base_info_teacher_teacher_proto_rawDescData
+	return file_api_v1_base_info_teacher_teacher_proto_rawDescData
 }
 
-var file_v1_base_info_teacher_teacher_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_v1_base_info_teacher_teacher_proto_goTypes = []any{
+var file_api_v1_base_info_teacher_teacher_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_api_v1_base_info_teacher_teacher_proto_goTypes = []any{
 	(*TeacherInfo)(nil),        // 0: api.v1.base_info.teacher_i.TeacherInfo
 	(*GetTeacherListReq)(nil),  // 1: api.v1.base_info.teacher_i.GetTeacherListReq
 	(*GetTeacherListResp)(nil), // 2: api.v1.base_info.teacher_i.GetTeacherListResp
 }
-var file_v1_base_info_teacher_teacher_proto_depIdxs = []int32{
+var file_api_v1_base_info_teacher_teacher_proto_depIdxs = []int32{
 	0, // 0: api.v1.base_info.teacher_i.GetTeacherListResp.data:type_name -> api.v1.base_info.teacher_i.TeacherInfo
 	1, // 1: api.v1.base_info.teacher_i.Teacher.List:input_type -> api.v1.base_info.teacher_i.GetTeacherListReq
 	2, // 2: api.v1.base_info.teacher_i.Teacher.List:output_type -> api.v1.base_info.teacher_i.GetTeacherListResp
@@ -270,26 +279,26 @@ var file_v1_base_info_teacher_teacher_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_v1_base_info_teacher_teacher_proto_init() }
-func file_v1_base_info_teacher_teacher_proto_init() {
-	if File_v1_base_info_teacher_teacher_proto != nil {
+func init() { file_api_v1_base_info_teacher_teacher_proto_init() }
+func file_api_v1_base_info_teacher_teacher_proto_init() {
+	if File_api_v1_base_info_teacher_teacher_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_base_info_teacher_teacher_proto_rawDesc), len(file_v1_base_info_teacher_teacher_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_base_info_teacher_teacher_proto_rawDesc), len(file_api_v1_base_info_teacher_teacher_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_v1_base_info_teacher_teacher_proto_goTypes,
-		DependencyIndexes: file_v1_base_info_teacher_teacher_proto_depIdxs,
-		MessageInfos:      file_v1_base_info_teacher_teacher_proto_msgTypes,
+		GoTypes:           file_api_v1_base_info_teacher_teacher_proto_goTypes,
+		DependencyIndexes: file_api_v1_base_info_teacher_teacher_proto_depIdxs,
+		MessageInfos:      file_api_v1_base_info_teacher_teacher_proto_msgTypes,
 	}.Build()
-	File_v1_base_info_teacher_teacher_proto = out.File
-	file_v1_base_info_teacher_teacher_proto_goTypes = nil
-	file_v1_base_info_teacher_teacher_proto_depIdxs = nil
+	File_api_v1_base_info_teacher_teacher_proto = out.File
+	file_api_v1_base_info_teacher_teacher_proto_goTypes = nil
+	file_api_v1_base_info_teacher_teacher_proto_depIdxs = nil
 }
