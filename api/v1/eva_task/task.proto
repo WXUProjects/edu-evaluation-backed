@@ -13,7 +13,7 @@ service Task {
       body: "*"
     };
   }
-  rpc List(GetTaskReq) returns (GetTaskListResp) {
+  rpc List(GetTaskListReq) returns (GetTaskListResp) {
     option (google.api.http) = {
       get: "/api/v1/task/list"
     };
@@ -23,12 +23,18 @@ service Task {
       get: "/api/v1/task/detail"
     };
   }
-
+  rpc ChangeStatus(ChangeTaskStatusReq) returns (ChangeTaskStatusResp) {
+    option (google.api.http) = {
+      post: "/api/v1/task/change_status"
+      body: "*"
+    };
+  }
 }
 
 message TaskInfo {
   string id = 1;
   string name = 2;
+  int32 status = 3;
   message CourseInfo {
     string id = 1;
     string name = 2;
@@ -36,7 +42,7 @@ message TaskInfo {
     int32 evaluationNum = 4;
     int32 totalNum = 5;
   }
-  repeated CourseInfo course = 3;
+  repeated CourseInfo course = 4;
 }
 
 message CreateTaskReq {
@@ -46,7 +52,11 @@ message CreateTaskReq {
 
 message CreateTaskResp {
   string message = 1;
-  string id = 2;
+  message d {
+    string id = 1;
+  }
+  d data = 2;
+
 }
 
 message GetTaskReq {
@@ -60,5 +70,20 @@ message GetTaskListReq {
 }
 
 message GetTaskListResp {
-  repeated TaskInfo tasks = 1;
+  string message = 1;
+  message d {
+    repeated TaskInfo tasks = 1;
+    int64 total = 2;
+  }
+  d data = 2;
+
+}
+
+message ChangeTaskStatusReq {
+  int32 id = 1;
+  int32 status = 2;
+}
+
+message ChangeTaskStatusResp {
+  string message = 1;
 }

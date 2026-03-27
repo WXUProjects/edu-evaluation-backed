@@ -26,7 +26,8 @@ type TaskInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Course        []*TaskInfo_CourseInfo `protobuf:"bytes,3,rep,name=course,proto3" json:"course,omitempty"`
+	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
+	Course        []*TaskInfo_CourseInfo `protobuf:"bytes,4,rep,name=course,proto3" json:"course,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -73,6 +74,13 @@ func (x *TaskInfo) GetName() string {
 		return x.Name
 	}
 	return ""
+}
+
+func (x *TaskInfo) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
 }
 
 func (x *TaskInfo) GetCourse() []*TaskInfo_CourseInfo {
@@ -137,7 +145,7 @@ func (x *CreateTaskReq) GetCourseIds() []int32 {
 type CreateTaskResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
-	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	Data          *CreateTaskRespD       `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -179,11 +187,11 @@ func (x *CreateTaskResp) GetMessage() string {
 	return ""
 }
 
-func (x *CreateTaskResp) GetId() string {
+func (x *CreateTaskResp) GetData() *CreateTaskRespD {
 	if x != nil {
-		return x.Id
+		return x.Data
 	}
-	return ""
+	return nil
 }
 
 type GetTaskReq struct {
@@ -292,7 +300,8 @@ func (x *GetTaskListReq) GetPageSize() int32 {
 
 type GetTaskListResp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Tasks         []*TaskInfo            `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Data          *GetTaskListRespD      `protobuf:"bytes,2,opt,name=data,proto3" json:"data,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -327,11 +336,114 @@ func (*GetTaskListResp) Descriptor() ([]byte, []int) {
 	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetTaskListResp) GetTasks() []*TaskInfo {
+func (x *GetTaskListResp) GetMessage() string {
 	if x != nil {
-		return x.Tasks
+		return x.Message
+	}
+	return ""
+}
+
+func (x *GetTaskListResp) GetData() *GetTaskListRespD {
+	if x != nil {
+		return x.Data
 	}
 	return nil
+}
+
+type ChangeTaskStatusReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            int32                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Status        int32                  `protobuf:"varint,2,opt,name=status,proto3" json:"status,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeTaskStatusReq) Reset() {
+	*x = ChangeTaskStatusReq{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeTaskStatusReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeTaskStatusReq) ProtoMessage() {}
+
+func (x *ChangeTaskStatusReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeTaskStatusReq.ProtoReflect.Descriptor instead.
+func (*ChangeTaskStatusReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *ChangeTaskStatusReq) GetId() int32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *ChangeTaskStatusReq) GetStatus() int32 {
+	if x != nil {
+		return x.Status
+	}
+	return 0
+}
+
+type ChangeTaskStatusResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChangeTaskStatusResp) Reset() {
+	*x = ChangeTaskStatusResp{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChangeTaskStatusResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChangeTaskStatusResp) ProtoMessage() {}
+
+func (x *ChangeTaskStatusResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChangeTaskStatusResp.ProtoReflect.Descriptor instead.
+func (*ChangeTaskStatusResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *ChangeTaskStatusResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
 }
 
 type TaskInfo_CourseInfo struct {
@@ -347,7 +459,7 @@ type TaskInfo_CourseInfo struct {
 
 func (x *TaskInfo_CourseInfo) Reset() {
 	*x = TaskInfo_CourseInfo{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -359,7 +471,7 @@ func (x *TaskInfo_CourseInfo) String() string {
 func (*TaskInfo_CourseInfo) ProtoMessage() {}
 
 func (x *TaskInfo_CourseInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -410,15 +522,112 @@ func (x *TaskInfo_CourseInfo) GetTotalNum() int32 {
 	return 0
 }
 
+type CreateTaskRespD struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CreateTaskRespD) Reset() {
+	*x = CreateTaskRespD{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreateTaskRespD) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateTaskRespD) ProtoMessage() {}
+
+func (x *CreateTaskRespD) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreateTaskRespD.ProtoReflect.Descriptor instead.
+func (*CreateTaskRespD) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{2, 0}
+}
+
+func (x *CreateTaskRespD) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetTaskListRespD struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tasks         []*TaskInfo            `protobuf:"bytes,1,rep,name=tasks,proto3" json:"tasks,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTaskListRespD) Reset() {
+	*x = GetTaskListRespD{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTaskListRespD) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTaskListRespD) ProtoMessage() {}
+
+func (x *GetTaskListRespD) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTaskListRespD.ProtoReflect.Descriptor instead.
+func (*GetTaskListRespD) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{5, 0}
+}
+
+func (x *GetTaskListRespD) GetTasks() []*TaskInfo {
+	if x != nil {
+		return x.Tasks
+	}
+	return nil
+}
+
+func (x *GetTaskListRespD) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
 var File_api_v1_eva_task_task_proto protoreflect.FileDescriptor
 
 const file_api_v1_eva_task_task_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/v1/eva_task/task.proto\x12\x0fapi.v1.eva_task\x1a\x1cgoogle/api/annotations.proto\"\x8b\x02\n" +
+	"\x1aapi/v1/eva_task/task.proto\x12\x0fapi.v1.eva_task\x1a\x1cgoogle/api/annotations.proto\"\xa3\x02\n" +
 	"\bTaskInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12<\n" +
-	"\x06course\x18\x03 \x03(\v2$.api.v1.eva_task.TaskInfo.CourseInfoR\x06course\x1a\x9c\x01\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\x12<\n" +
+	"\x06course\x18\x04 \x03(\v2$.api.v1.eva_task.TaskInfo.CourseInfoR\x06course\x1a\x9c\x01\n" +
 	"\n" +
 	"CourseInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
@@ -428,24 +637,36 @@ const file_api_v1_eva_task_task_proto_rawDesc = "" +
 	"\btotalNum\x18\x05 \x01(\x05R\btotalNum\"A\n" +
 	"\rCreateTaskReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
-	"\tcourseIds\x18\x02 \x03(\x05R\tcourseIds\":\n" +
+	"\tcourseIds\x18\x02 \x03(\x05R\tcourseIds\"v\n" +
 	"\x0eCreateTaskResp\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\"\x1c\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x125\n" +
+	"\x04data\x18\x02 \x01(\v2!.api.v1.eva_task.CreateTaskResp.dR\x04data\x1a\x13\n" +
+	"\x01d\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\x1c\n" +
 	"\n" +
 	"GetTaskReq\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"X\n" +
 	"\x0eGetTaskListReq\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x05R\x06status\x12\x12\n" +
 	"\x04page\x18\x02 \x01(\x05R\x04page\x12\x1a\n" +
-	"\bpageSize\x18\x03 \x01(\x05R\bpageSize\"B\n" +
-	"\x0fGetTaskListResp\x12/\n" +
-	"\x05tasks\x18\x01 \x03(\v2\x19.api.v1.eva_task.TaskInfoR\x05tasks2\xb6\x02\n" +
+	"\bpageSize\x18\x03 \x01(\x05R\bpageSize\"\xaf\x01\n" +
+	"\x0fGetTaskListResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x126\n" +
+	"\x04data\x18\x02 \x01(\v2\".api.v1.eva_task.GetTaskListResp.dR\x04data\x1aJ\n" +
+	"\x01d\x12/\n" +
+	"\x05tasks\x18\x01 \x03(\v2\x19.api.v1.eva_task.TaskInfoR\x05tasks\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"=\n" +
+	"\x13ChangeTaskStatusReq\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x16\n" +
+	"\x06status\x18\x02 \x01(\x05R\x06status\"0\n" +
+	"\x14ChangeTaskStatusResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xbf\x03\n" +
 	"\x04Task\x12m\n" +
 	"\n" +
-	"CreateTask\x12\x1e.api.v1.eva_task.CreateTaskReq\x1a\x1f.api.v1.eva_task.CreateTaskResp\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/task/create\x12`\n" +
-	"\x04List\x12\x1b.api.v1.eva_task.GetTaskReq\x1a .api.v1.eva_task.GetTaskListResp\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/task/list\x12]\n" +
-	"\x06Detail\x12\x1b.api.v1.eva_task.GetTaskReq\x1a\x19.api.v1.eva_task.TaskInfo\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/task/detailBC\n" +
+	"CreateTask\x12\x1e.api.v1.eva_task.CreateTaskReq\x1a\x1f.api.v1.eva_task.CreateTaskResp\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/task/create\x12d\n" +
+	"\x04List\x12\x1f.api.v1.eva_task.GetTaskListReq\x1a .api.v1.eva_task.GetTaskListResp\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/task/list\x12]\n" +
+	"\x06Detail\x12\x1b.api.v1.eva_task.GetTaskReq\x1a\x19.api.v1.eva_task.TaskInfo\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/task/detail\x12\x82\x01\n" +
+	"\fChangeStatus\x12$.api.v1.eva_task.ChangeTaskStatusReq\x1a%.api.v1.eva_task.ChangeTaskStatusResp\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/task/change_statusBC\n" +
 	"\x0fapi.v1.eva_taskP\x01Z.edu-evaluation-backed/api/v1/eva_task;eva_taskb\x06proto3"
 
 var (
@@ -460,30 +681,38 @@ func file_api_v1_eva_task_task_proto_rawDescGZIP() []byte {
 	return file_api_v1_eva_task_task_proto_rawDescData
 }
 
-var file_api_v1_eva_task_task_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_api_v1_eva_task_task_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_api_v1_eva_task_task_proto_goTypes = []any{
-	(*TaskInfo)(nil),            // 0: api.v1.eva_task.TaskInfo
-	(*CreateTaskReq)(nil),       // 1: api.v1.eva_task.CreateTaskReq
-	(*CreateTaskResp)(nil),      // 2: api.v1.eva_task.CreateTaskResp
-	(*GetTaskReq)(nil),          // 3: api.v1.eva_task.GetTaskReq
-	(*GetTaskListReq)(nil),      // 4: api.v1.eva_task.GetTaskListReq
-	(*GetTaskListResp)(nil),     // 5: api.v1.eva_task.GetTaskListResp
-	(*TaskInfo_CourseInfo)(nil), // 6: api.v1.eva_task.TaskInfo.CourseInfo
+	(*TaskInfo)(nil),             // 0: api.v1.eva_task.TaskInfo
+	(*CreateTaskReq)(nil),        // 1: api.v1.eva_task.CreateTaskReq
+	(*CreateTaskResp)(nil),       // 2: api.v1.eva_task.CreateTaskResp
+	(*GetTaskReq)(nil),           // 3: api.v1.eva_task.GetTaskReq
+	(*GetTaskListReq)(nil),       // 4: api.v1.eva_task.GetTaskListReq
+	(*GetTaskListResp)(nil),      // 5: api.v1.eva_task.GetTaskListResp
+	(*ChangeTaskStatusReq)(nil),  // 6: api.v1.eva_task.ChangeTaskStatusReq
+	(*ChangeTaskStatusResp)(nil), // 7: api.v1.eva_task.ChangeTaskStatusResp
+	(*TaskInfo_CourseInfo)(nil),  // 8: api.v1.eva_task.TaskInfo.CourseInfo
+	(*CreateTaskRespD)(nil),      // 9: api.v1.eva_task.CreateTaskResp.d
+	(*GetTaskListRespD)(nil),     // 10: api.v1.eva_task.GetTaskListResp.d
 }
 var file_api_v1_eva_task_task_proto_depIdxs = []int32{
-	6, // 0: api.v1.eva_task.TaskInfo.course:type_name -> api.v1.eva_task.TaskInfo.CourseInfo
-	0, // 1: api.v1.eva_task.GetTaskListResp.tasks:type_name -> api.v1.eva_task.TaskInfo
-	1, // 2: api.v1.eva_task.Task.CreateTask:input_type -> api.v1.eva_task.CreateTaskReq
-	3, // 3: api.v1.eva_task.Task.List:input_type -> api.v1.eva_task.GetTaskReq
-	3, // 4: api.v1.eva_task.Task.Detail:input_type -> api.v1.eva_task.GetTaskReq
-	2, // 5: api.v1.eva_task.Task.CreateTask:output_type -> api.v1.eva_task.CreateTaskResp
-	5, // 6: api.v1.eva_task.Task.List:output_type -> api.v1.eva_task.GetTaskListResp
-	0, // 7: api.v1.eva_task.Task.Detail:output_type -> api.v1.eva_task.TaskInfo
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	8,  // 0: api.v1.eva_task.TaskInfo.course:type_name -> api.v1.eva_task.TaskInfo.CourseInfo
+	9,  // 1: api.v1.eva_task.CreateTaskResp.data:type_name -> api.v1.eva_task.CreateTaskResp.d
+	10, // 2: api.v1.eva_task.GetTaskListResp.data:type_name -> api.v1.eva_task.GetTaskListResp.d
+	0,  // 3: api.v1.eva_task.GetTaskListResp.d.tasks:type_name -> api.v1.eva_task.TaskInfo
+	1,  // 4: api.v1.eva_task.Task.CreateTask:input_type -> api.v1.eva_task.CreateTaskReq
+	4,  // 5: api.v1.eva_task.Task.List:input_type -> api.v1.eva_task.GetTaskListReq
+	3,  // 6: api.v1.eva_task.Task.Detail:input_type -> api.v1.eva_task.GetTaskReq
+	6,  // 7: api.v1.eva_task.Task.ChangeStatus:input_type -> api.v1.eva_task.ChangeTaskStatusReq
+	2,  // 8: api.v1.eva_task.Task.CreateTask:output_type -> api.v1.eva_task.CreateTaskResp
+	5,  // 9: api.v1.eva_task.Task.List:output_type -> api.v1.eva_task.GetTaskListResp
+	0,  // 10: api.v1.eva_task.Task.Detail:output_type -> api.v1.eva_task.TaskInfo
+	7,  // 11: api.v1.eva_task.Task.ChangeStatus:output_type -> api.v1.eva_task.ChangeTaskStatusResp
+	8,  // [8:12] is the sub-list for method output_type
+	4,  // [4:8] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_eva_task_task_proto_init() }
@@ -497,7 +726,7 @@ func file_api_v1_eva_task_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_eva_task_task_proto_rawDesc), len(file_api_v1_eva_task_task_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

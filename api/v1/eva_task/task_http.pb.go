@@ -19,14 +19,16 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationTaskChangeStatus = "/api.v1.eva_task.Task/ChangeStatus"
 const OperationTaskCreateTask = "/api.v1.eva_task.Task/CreateTask"
 const OperationTaskDetail = "/api.v1.eva_task.Task/Detail"
 const OperationTaskList = "/api.v1.eva_task.Task/List"
 
 type TaskHTTPServer interface {
+	ChangeStatus(context.Context, *ChangeTaskStatusReq) (*ChangeTaskStatusResp, error)
 	CreateTask(context.Context, *CreateTaskReq) (*CreateTaskResp, error)
 	Detail(context.Context, *GetTaskReq) (*TaskInfo, error)
-	List(context.Context, *GetTaskReq) (*GetTaskListResp, error)
+	List(context.Context, *GetTaskListReq) (*GetTaskListResp, error)
 }
 
 func RegisterTaskHTTPServer(s *http.Server, srv TaskHTTPServer) {
@@ -34,6 +36,7 @@ func RegisterTaskHTTPServer(s *http.Server, srv TaskHTTPServer) {
 	r.POST("/api/v1/task/create", _Task_CreateTask0_HTTP_Handler(srv))
 	r.GET("/api/v1/task/list", _Task_List0_HTTP_Handler(srv))
 	r.GET("/api/v1/task/detail", _Task_Detail0_HTTP_Handler(srv))
+	r.POST("/api/v1/task/change_status", _Task_ChangeStatus0_HTTP_Handler(srv))
 }
 
 func _Task_CreateTask0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
@@ -60,13 +63,13 @@ func _Task_CreateTask0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) e
 
 func _Task_List0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetTaskReq
+		var in GetTaskListReq
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationTaskList)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.List(ctx, req.(*GetTaskReq))
+			return srv.List(ctx, req.(*GetTaskListReq))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -96,10 +99,33 @@ func _Task_Detail0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error
 	}
 }
 
+func _Task_ChangeStatus0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ChangeTaskStatusReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTaskChangeStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ChangeStatus(ctx, req.(*ChangeTaskStatusReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ChangeTaskStatusResp)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TaskHTTPClient interface {
+	ChangeStatus(ctx context.Context, req *ChangeTaskStatusReq, opts ...http.CallOption) (rsp *ChangeTaskStatusResp, err error)
 	CreateTask(ctx context.Context, req *CreateTaskReq, opts ...http.CallOption) (rsp *CreateTaskResp, err error)
 	Detail(ctx context.Context, req *GetTaskReq, opts ...http.CallOption) (rsp *TaskInfo, err error)
-	List(ctx context.Context, req *GetTaskReq, opts ...http.CallOption) (rsp *GetTaskListResp, err error)
+	List(ctx context.Context, req *GetTaskListReq, opts ...http.CallOption) (rsp *GetTaskListResp, err error)
 }
 
 type TaskHTTPClientImpl struct {
@@ -108,6 +134,19 @@ type TaskHTTPClientImpl struct {
 
 func NewTaskHTTPClient(client *http.Client) TaskHTTPClient {
 	return &TaskHTTPClientImpl{client}
+}
+
+func (c *TaskHTTPClientImpl) ChangeStatus(ctx context.Context, in *ChangeTaskStatusReq, opts ...http.CallOption) (*ChangeTaskStatusResp, error) {
+	var out ChangeTaskStatusResp
+	pattern := "/api/v1/task/change_status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTaskChangeStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
 }
 
 func (c *TaskHTTPClientImpl) CreateTask(ctx context.Context, in *CreateTaskReq, opts ...http.CallOption) (*CreateTaskResp, error) {
@@ -136,7 +175,7 @@ func (c *TaskHTTPClientImpl) Detail(ctx context.Context, in *GetTaskReq, opts ..
 	return &out, nil
 }
 
-func (c *TaskHTTPClientImpl) List(ctx context.Context, in *GetTaskReq, opts ...http.CallOption) (*GetTaskListResp, error) {
+func (c *TaskHTTPClientImpl) List(ctx context.Context, in *GetTaskListReq, opts ...http.CallOption) (*GetTaskListResp, error) {
 	var out GetTaskListResp
 	pattern := "/api/v1/task/list"
 	path := binding.EncodeURL(pattern, in, true)

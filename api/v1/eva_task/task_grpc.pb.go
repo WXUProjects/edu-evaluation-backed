@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Task_CreateTask_FullMethodName = "/api.v1.eva_task.Task/CreateTask"
-	Task_List_FullMethodName       = "/api.v1.eva_task.Task/List"
-	Task_Detail_FullMethodName     = "/api.v1.eva_task.Task/Detail"
+	Task_CreateTask_FullMethodName   = "/api.v1.eva_task.Task/CreateTask"
+	Task_List_FullMethodName         = "/api.v1.eva_task.Task/List"
+	Task_Detail_FullMethodName       = "/api.v1.eva_task.Task/Detail"
+	Task_ChangeStatus_FullMethodName = "/api.v1.eva_task.Task/ChangeStatus"
 )
 
 // TaskClient is the client API for Task service.
@@ -29,8 +30,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TaskClient interface {
 	CreateTask(ctx context.Context, in *CreateTaskReq, opts ...grpc.CallOption) (*CreateTaskResp, error)
-	List(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskListResp, error)
+	List(ctx context.Context, in *GetTaskListReq, opts ...grpc.CallOption) (*GetTaskListResp, error)
 	Detail(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*TaskInfo, error)
+	ChangeStatus(ctx context.Context, in *ChangeTaskStatusReq, opts ...grpc.CallOption) (*ChangeTaskStatusResp, error)
 }
 
 type taskClient struct {
@@ -51,7 +53,7 @@ func (c *taskClient) CreateTask(ctx context.Context, in *CreateTaskReq, opts ...
 	return out, nil
 }
 
-func (c *taskClient) List(ctx context.Context, in *GetTaskReq, opts ...grpc.CallOption) (*GetTaskListResp, error) {
+func (c *taskClient) List(ctx context.Context, in *GetTaskListReq, opts ...grpc.CallOption) (*GetTaskListResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetTaskListResp)
 	err := c.cc.Invoke(ctx, Task_List_FullMethodName, in, out, cOpts...)
@@ -71,13 +73,24 @@ func (c *taskClient) Detail(ctx context.Context, in *GetTaskReq, opts ...grpc.Ca
 	return out, nil
 }
 
+func (c *taskClient) ChangeStatus(ctx context.Context, in *ChangeTaskStatusReq, opts ...grpc.CallOption) (*ChangeTaskStatusResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeTaskStatusResp)
+	err := c.cc.Invoke(ctx, Task_ChangeStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // TaskServer is the server API for Task service.
 // All implementations must embed UnimplementedTaskServer
 // for forward compatibility.
 type TaskServer interface {
 	CreateTask(context.Context, *CreateTaskReq) (*CreateTaskResp, error)
-	List(context.Context, *GetTaskReq) (*GetTaskListResp, error)
+	List(context.Context, *GetTaskListReq) (*GetTaskListResp, error)
 	Detail(context.Context, *GetTaskReq) (*TaskInfo, error)
+	ChangeStatus(context.Context, *ChangeTaskStatusReq) (*ChangeTaskStatusResp, error)
 	mustEmbedUnimplementedTaskServer()
 }
 
@@ -91,11 +104,14 @@ type UnimplementedTaskServer struct{}
 func (UnimplementedTaskServer) CreateTask(context.Context, *CreateTaskReq) (*CreateTaskResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method CreateTask not implemented")
 }
-func (UnimplementedTaskServer) List(context.Context, *GetTaskReq) (*GetTaskListResp, error) {
+func (UnimplementedTaskServer) List(context.Context, *GetTaskListReq) (*GetTaskListResp, error) {
 	return nil, status.Error(codes.Unimplemented, "method List not implemented")
 }
 func (UnimplementedTaskServer) Detail(context.Context, *GetTaskReq) (*TaskInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method Detail not implemented")
+}
+func (UnimplementedTaskServer) ChangeStatus(context.Context, *ChangeTaskStatusReq) (*ChangeTaskStatusResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method ChangeStatus not implemented")
 }
 func (UnimplementedTaskServer) mustEmbedUnimplementedTaskServer() {}
 func (UnimplementedTaskServer) testEmbeddedByValue()              {}
@@ -137,7 +153,7 @@ func _Task_CreateTask_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _Task_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTaskReq)
+	in := new(GetTaskListReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -149,7 +165,7 @@ func _Task_List_Handler(srv interface{}, ctx context.Context, dec func(interface
 		FullMethod: Task_List_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TaskServer).List(ctx, req.(*GetTaskReq))
+		return srv.(TaskServer).List(ctx, req.(*GetTaskListReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -172,6 +188,24 @@ func _Task_Detail_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Task_ChangeStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeTaskStatusReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TaskServer).ChangeStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Task_ChangeStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TaskServer).ChangeStatus(ctx, req.(*ChangeTaskStatusReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Task_ServiceDesc is the grpc.ServiceDesc for Task service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var Task_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Detail",
 			Handler:    _Task_Detail_Handler,
+		},
+		{
+			MethodName: "ChangeStatus",
+			Handler:    _Task_ChangeStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
