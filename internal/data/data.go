@@ -60,4 +60,16 @@ func migrateModels(db *gorm.DB) {
 	if err != nil {
 		panic("数据库：数据库自动合并失败" + err.Error())
 	}
+	// 插入默认管理员账号
+	seedAdmin(db)
+}
+
+// seedAdmin 插入默认管理员账号
+func seedAdmin(db *gorm.DB) {
+	var count int64
+	db.Model(&model.Admin{}).Count(&count)
+	if count == 0 {
+		admin := &model.Admin{Username: "admin", Password: "admin"}
+		db.Create(admin)
+	}
 }

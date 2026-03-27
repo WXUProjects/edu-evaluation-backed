@@ -7,12 +7,14 @@
 package main
 
 import (
+	"edu-evaluation-backed/internal/biz/auth"
 	"edu-evaluation-backed/internal/biz/base_info"
 	"edu-evaluation-backed/internal/biz/eva_task"
 	"edu-evaluation-backed/internal/conf"
 	"edu-evaluation-backed/internal/data"
 	"edu-evaluation-backed/internal/data/dal"
 	"edu-evaluation-backed/internal/server"
+	auth2 "edu-evaluation-backed/internal/service/auth"
 	base_info2 "edu-evaluation-backed/internal/service/base_info"
 	eva_task2 "edu-evaluation-backed/internal/service/eva_task"
 	"github.com/go-kratos/kratos/v2"
@@ -32,6 +34,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		return nil, nil, err
 	}
 	baseInfoDal := dal.NewBaseInfoDal(dataData)
+	authUseCase := auth.NewAuthUseCase(baseInfoDal)
+	authService := auth2.NewAuthService(authUseCase)
 	studentUseCase := base_info.NewStudentUseCase(baseInfoDal)
 	studentService := base_info2.NewStudentService(studentUseCase, baseInfoDal)
 	teacherUseCase := base_info.NewTeacherUseCase(baseInfoDal)
@@ -42,7 +46,7 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	taskDal := dal.NewTaskDal(dataData)
 	evaTaskUseCase := eva_task.NewEvaTaskUseCase(baseInfoDal, taskDal, courseDal)
 	evaTaskService := eva_task2.NewEvaTaskService(taskDal, evaTaskUseCase)
-	httpServer := server.NewHTTPServer(confServer, studentService, teacherService, courseService, evaTaskService, logger)
+	httpServer := server.NewHTTPServer(confServer, authService, studentService, teacherService, courseService, evaTaskService, logger)
 	app := newApp(logger, httpServer)
 	return app, func() {
 		cleanup()
