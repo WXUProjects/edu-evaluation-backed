@@ -61,7 +61,7 @@ func (c CourseDal) List(page, pageSize int) (*[]model.Course, int64, error) {
 	}
 	var courses []model.Course
 	var tot int64
-	err := c.db.Limit(pageSize).Preload("Teachers").Offset((page - 1) * pageSize).Find(&courses).Count(&tot).Error
+	err := c.db.Model(&model.Course{}).Count(&tot).Limit(pageSize).Preload("Teachers").Offset((page - 1) * pageSize).Find(&courses).Error
 	return &courses, tot, err
 }
 
