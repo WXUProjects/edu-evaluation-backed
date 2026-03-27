@@ -142,3 +142,284 @@ func NewTaskDal(data *data.Data) *TaskDal {
 		rdb: data.RDB,
 	}
 }
+
+// TeacherEvaluationResult 教师评教结果（用于导出）
+type TeacherEvaluationResult struct {
+	TeacherName    string   // 教师姓名
+	WorkNo        string   // 教师工号
+	CourseName    string   // 课程名称
+	ClassName     string   // 班级名称
+	TotalScore    float64  // 总分
+	AvgScore      float64  // 平均分
+	Rank          int     // 排名
+	QuestionScores [][]int  // 每道题的分数组（每个学生一行）
+}
+
+// TeacherEvaluationDetail 教师评教详情（用于生成PDF）
+type TeacherEvaluationDetail struct {
+	TeacherName    string   // 教师姓名
+	WorkNo        string   // 教师工号
+	CourseName     string   // 课程名称
+	ClassName     string   // 班级名称
+	AvgScore      float64  // 平均分
+	Rank          int      // 排名
+	TotalTeachers int      // 总教师数
+	Comments      []string // 学生评价列表
+	Summary       string   // 学生总结
+}
+
+// GetTaskEvaluationResults 获取任务下所有教师的评教结果
+func (d *TaskDal) GetTaskEvaluationResults(taskID uint) ([]TeacherEvaluationResult, error) {
+	var results []TeacherEvaluationResult
+
+	// 使用 SQL 关联查询获取评教详情及教师、课程信息
+	rows, err := d.db.Raw(`
+		SELECT
+			ed.id,
+			ed.teacher_id,
+			ed.course_id,
+			ed.detail,
+			ed.score,
+			t.name as teacher_name,
+			t.work_no as teacher_work_no,
+			c.course_name,
+			c.class_name
+		FROM evaluation_details ed
+		INNER JOIN teachers t ON ed.teacher_id = t.id
+		INNER JOIN courses c ON ed.course_id = c.id
+		WHERE ed.task_id = ?
+	`, taskID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// 按教师+课程分组
+	type groupKey struct {
+		teacherID uint
+		courseID  uint
+	}
+	type groupData struct {
+		teacherName string
+		workNo     string
+		courseName  string
+		className   string
+		details    []struct {
+			detail string
+			score  int
+		}
+	}
+	groupMap := make(map[groupKey]*groupData)
+
+	for rows.Next() {
+		var id, teacherID, courseID uint
+		var detail string
+		var score int
+		var teacherName, workNo, courseName, className string
+
+		if err := rows.Scan(&id, &teacherID, &courseID, &detail, &score, &teacherName, &workNo, &courseName, &className); err != nil {
+			return nil, err
+		}
+
+		key := groupKey{teacherID: teacherID, courseID: courseID}
+		if _, ok := groupMap[key]; !ok {
+			groupMap[key] = &groupData{
+				teacherName: teacherName,
+				workNo:     workNo,
+				courseName:  courseName,
+				className:   className,
+				details:     make([]struct{ detail string; score int }, 0),
+			}
+		}
+		groupMap[key].details = append(groupMap[key].details, struct {
+			detail string
+			score  int
+		}{detail: detail, score: score})
+	}
+
+	if len(groupMap) == 0 {
+		return nil, errors.New("暂无评教数据")
+	}
+
+	// 构建结果
+	for _, data := range groupMap {
+		if len(data.details) == 0 {
+			continue
+		}
+
+		var totalScore float64
+		questionScores := make([][]int, len(data.details))
+
+		for i, d := range data.details {
+			totalScore += float64(d.score)
+			questionScores[i] = parseDetailScores(d.detail)
+		}
+
+		result := TeacherEvaluationResult{
+			TeacherName:    data.teacherName,
+			WorkNo:        data.workNo,
+			CourseName:    data.courseName,
+			ClassName:     data.className,
+			TotalScore:    totalScore,
+			AvgScore:      totalScore / float64(len(data.details)),
+			QuestionScores: questionScores,
+		}
+		results = append(results, result)
+	}
+
+	return results, nil
+}
+
+// GetTeacherEvaluationDetailsForPDF 获取教师评教详情（用于生成PDF）
+// 按教师+班级分组，返回每个组合的评教详情
+func (d *TaskDal) GetTeacherEvaluationDetailsForPDF(taskID uint) ([]TeacherEvaluationDetail, error) {
+	// 查询每个教师-课程组合的评教数据
+	rows, err := d.db.Raw(`
+		SELECT
+			t.name as teacher_name,
+			t.work_no as teacher_work_no,
+			c.course_name,
+			c.class_name,
+			AVG(ed.score) as avg_score,
+			ed.detail,
+			ed.summary
+		FROM evaluation_details ed
+		INNER JOIN teachers t ON ed.teacher_id = t.id
+		INNER JOIN courses c ON ed.course_id = c.id
+		WHERE ed.task_id = ?
+		GROUP BY t.id, t.name, t.work_no, c.id, c.course_name, c.class_name, ed.detail, ed.summary
+		ORDER BY t.name, c.class_name, avg_score DESC
+	`, taskID).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	// 按教师+班级分组收集数据
+	type teacherCourseData struct {
+		TeacherName  string
+		WorkNo      string
+		CourseName  string
+		ClassName   string
+		TotalScore  float64
+		AvgScore    float64
+		Count       int
+		Comments    []string
+		Summary     string
+	}
+
+	dataMap := make(map[string]*teacherCourseData)
+
+	for rows.Next() {
+		var teacherName, workNo, courseName, className, detail, summary string
+		var avgScore float64
+
+		if err := rows.Scan(&teacherName, &workNo, &courseName, &className, &avgScore, &detail, &summary); err != nil {
+			continue
+		}
+
+		key := teacherName + "_" + className
+		if _, ok := dataMap[key]; !ok {
+			dataMap[key] = &teacherCourseData{
+				TeacherName: teacherName,
+				WorkNo:     workNo,
+				CourseName: courseName,
+				ClassName:  className,
+				Comments:   make([]string, 0),
+			}
+		}
+
+		dataMap[key].TotalScore += avgScore
+		dataMap[key].Count++
+		if detail != "" {
+			dataMap[key].Comments = append(dataMap[key].Comments, detail)
+		}
+		if summary != "" {
+			dataMap[key].Summary = summary
+		}
+	}
+
+	if len(dataMap) == 0 {
+		return nil, errors.New("暂无评教数据")
+	}
+
+	// 计算每个教师的平均分并排序
+	type teacherScore struct {
+		key      string
+		avgScore float64
+	}
+	var scores []teacherScore
+	for key, td := range dataMap {
+		td.AvgScore = td.TotalScore / float64(td.Count)
+		scores = append(scores, teacherScore{key: key, avgScore: td.AvgScore})
+	}
+
+	// 按平均分降序排序
+	for i := 0; i < len(scores); i++ {
+		for j := i + 1; j < len(scores); j++ {
+			if scores[j].avgScore > scores[i].avgScore {
+				scores[i], scores[j] = scores[j], scores[i]
+			}
+		}
+	}
+
+	// 构建结果
+	var details []TeacherEvaluationDetail
+	for rank, s := range scores {
+		td := dataMap[s.key]
+		detail := TeacherEvaluationDetail{
+			TeacherName:    td.TeacherName,
+			WorkNo:        td.WorkNo,
+			CourseName:    td.CourseName,
+			ClassName:     td.ClassName,
+			AvgScore:      td.AvgScore,
+			Rank:          rank + 1,
+			TotalTeachers: len(scores),
+			Comments:      td.Comments,
+			Summary:       td.Summary,
+		}
+		details = append(details, detail)
+	}
+
+	return details, nil
+}
+
+// parseDetailScores 解析 Detail 字段的 JSON 数组字符串
+func parseDetailScores(detail string) []int {
+	// Detail 格式类似 "[1,2,3,4,5,3,2]"
+	if len(detail) < 2 {
+		return nil
+	}
+	// 去掉首尾的 []
+	detail = detail[1 : len(detail)-1]
+	if detail == "" {
+		return nil
+	}
+
+	var scores []int
+	for _, s := range splitAndTrim(detail, ",") {
+		var score int
+		for _, c := range s {
+			if c >= '0' && c <= '9' {
+				score = score*10 + int(c-'0')
+			}
+		}
+		scores = append(scores, score)
+	}
+	return scores
+}
+
+// splitAndTrim 分割字符串并去除空白
+func splitAndTrim(s string, sep string) []string {
+	var result []string
+	start := 0
+	for i := 0; i <= len(s)-len(sep); i++ {
+		if s[i:i+len(sep)] == sep {
+			result = append(result, s[start:i])
+			start = i + len(sep)
+			i += len(sep) - 1
+		}
+	}
+	result = append(result, s[start:])
+	return result
+}

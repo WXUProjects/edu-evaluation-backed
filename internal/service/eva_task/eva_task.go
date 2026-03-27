@@ -1,13 +1,12 @@
 package eva_task
 
 import (
-	context "context"
+	"context"
+	"strconv"
+
 	eva_task2 "edu-evaluation-backed/api/v1/eva_task"
 	"edu-evaluation-backed/internal/biz/eva_task"
 	"edu-evaluation-backed/internal/data/dal"
-	"strconv"
-
-	"github.com/go-kratos/kratos/v2/log"
 )
 
 // EvaTaskService 评教任务服务
@@ -30,7 +29,6 @@ func (e EvaTaskService) SubmitEvaluation(ctx context.Context, req *eva_task2.Sub
 // StudentTaskDetail 获取学生评教任务详情
 func (e EvaTaskService) StudentTaskDetail(ctx context.Context, req *eva_task2.StuTaskDetailReq) (*eva_task2.StuTaskDetailRes, error) {
 	c, err := e.taskDal.StudentTaskDetail(req.StuNo, uint(req.TaskId))
-	log.Info(c)
 	if err != nil {
 		return nil, err
 	}
@@ -168,4 +166,19 @@ func NewEvaTaskService(taskDal *dal.TaskDal, taskUC *eva_task.EvaTaskUseCase) *E
 		taskDal: taskDal,
 		taskUC:  taskUC,
 	}
+}
+
+// ExportTaskResults 导出任务评教结果为 xlsx
+func (e *EvaTaskService) ExportTaskResults(ctx context.Context, req *eva_task2.ExportTaskResultsReq) (*eva_task2.ExportTaskResultsResp, error) {
+	taskID := uint(req.TaskId)
+
+	xlsxPath, err := e.taskUC.ExportTaskResults(taskID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &eva_task2.ExportTaskResultsResp{
+		Message:  "导出成功",
+		FilePath: xlsxPath,
+	}, nil
 }

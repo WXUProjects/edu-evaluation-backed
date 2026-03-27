@@ -3,19 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: Auth API
+    title: Task API
     version: 0.0.1
 paths:
-    /api/v1/auth/admin/login:
+    /api/v1/task/change_status:
         post:
             tags:
-                - Auth
-            operationId: Auth_AdminLogin
+                - Task
+            operationId: Task_ChangeStatus
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.auth.AdminLoginReq'
+                            $ref: '#/components/schemas/api.v1.eva_task.ChangeTaskStatusReq'
                 required: true
             responses:
                 "200":
@@ -23,13 +23,99 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.auth.AdminLoginResp'
-    /api/v1/auth/student/info:
+                                $ref: '#/components/schemas/api.v1.eva_task.ChangeTaskStatusResp'
+    /api/v1/task/create:
+        post:
+            tags:
+                - Task
+            operationId: Task_CreateTask
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.v1.eva_task.CreateTaskReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.eva_task.CreateTaskResp'
+    /api/v1/task/detail:
         get:
             tags:
-                - Auth
-            operationId: Auth_StudentInfo
+                - Task
+            operationId: Task_Detail
             parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.eva_task.TaskInfo'
+    /api/v1/task/export:
+        get:
+            tags:
+                - Task
+            operationId: Task_ExportTaskResults
+            parameters:
+                - name: taskId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.eva_task.ExportTaskResultsResp'
+    /api/v1/task/list:
+        get:
+            tags:
+                - Task
+            operationId: Task_List
+            parameters:
+                - name: status
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.v1.eva_task.GetTaskListResp'
+    /api/v1/task/student_task_detail:
+        get:
+            tags:
+                - Task
+            operationId: Task_StudentTaskDetail
+            parameters:
+                - name: taskId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
                 - name: stuNo
                   in: query
                   schema:
@@ -40,17 +126,17 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.auth.StudentInfoResp'
-    /api/v1/auth/student/login:
+                                $ref: '#/components/schemas/api.v1.eva_task.StuTaskDetailRes'
+    /api/v1/task/submit_evaluation:
         post:
             tags:
-                - Auth
-            operationId: Auth_StudentLogin
+                - Task
+            operationId: Task_SubmitEvaluation
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.v1.auth.StudentLoginReq'
+                            $ref: '#/components/schemas/api.v1.eva_task.SubmitEvaluationReq'
                 required: true
             responses:
                 "200":
@@ -58,65 +144,145 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.v1.auth.StudentLoginResp'
+                                $ref: '#/components/schemas/api.v1.eva_task.SubmitEvaluationResp'
 components:
     schemas:
-        api.v1.auth.AdminLoginReq:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-        api.v1.auth.AdminLoginResp:
-            type: object
-            properties:
-                message:
-                    type: string
-        api.v1.auth.StudentData:
-            type: object
-            properties:
-                studentNo:
-                    type: string
-                name:
-                    type: string
-        api.v1.auth.StudentDetailInfo:
+        api.v1.eva_task.ChangeTaskStatusReq:
             type: object
             properties:
                 id:
                     type: integer
-                    format: uint32
+                    format: int32
+                status:
+                    type: integer
+                    format: int32
+        api.v1.eva_task.ChangeTaskStatusResp:
+            type: object
+            properties:
+                message:
+                    type: string
+        api.v1.eva_task.CourseInfo:
+            type: object
+            properties:
+                id:
+                    type: string
                 name:
                     type: string
-                sex:
+                evaluationScore:
+                    type: integer
+                    format: int32
+                evaluationNum:
+                    type: integer
+                    format: int32
+                totalNum:
+                    type: integer
+                    format: int32
+                teacher:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.eva_task.CourseInfo_TeacherInfo'
+        api.v1.eva_task.CourseInfo_TeacherInfo:
+            type: object
+            properties:
+                id:
                     type: string
-                studentNo:
+                name:
                     type: string
-                idCardNo:
+                hasEvaluation:
+                    type: boolean
+        api.v1.eva_task.CreateTaskReq:
+            type: object
+            properties:
+                name:
                     type: string
-        api.v1.auth.StudentInfoResp:
+                courseIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: int32
+        api.v1.eva_task.CreateTaskResp:
             type: object
             properties:
                 message:
                     type: string
                 data:
-                    $ref: '#/components/schemas/api.v1.auth.StudentDetailInfo'
-        api.v1.auth.StudentLoginReq:
+                    $ref: '#/components/schemas/api.v1.eva_task.CreateTaskResp_d'
+        api.v1.eva_task.CreateTaskResp_d:
             type: object
             properties:
-                stuNo:
+                id:
                     type: string
-                cardNo:
+        api.v1.eva_task.ExportTaskResultsResp:
+            type: object
+            properties:
+                message:
                     type: string
+                filePath:
+                    type: string
+        api.v1.eva_task.GetTaskListResp:
+            type: object
+            properties:
+                message:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/api.v1.eva_task.GetTaskListResp_d'
+        api.v1.eva_task.GetTaskListResp_d:
+            type: object
+            properties:
+                tasks:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.eva_task.TaskInfo'
+                total:
+                    type: string
+        api.v1.eva_task.StuTaskDetailRes:
+            type: object
+            properties:
+                message:
+                    type: string
+                course:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.eva_task.CourseInfo'
+        api.v1.eva_task.SubmitEvaluationReq:
+            type: object
+            properties:
                 taskId:
                     type: integer
                     format: uint32
-        api.v1.auth.StudentLoginResp:
+                courseId:
+                    type: integer
+                    format: uint32
+                teacherId:
+                    type: integer
+                    format: uint32
+                stuNo:
+                    type: string
+                detailScore:
+                    type: string
+                score:
+                    type: integer
+                    format: int32
+                comment:
+                    type: string
+        api.v1.eva_task.SubmitEvaluationResp:
             type: object
             properties:
                 message:
                     type: string
-                data:
-                    $ref: '#/components/schemas/api.v1.auth.StudentData'
+        api.v1.eva_task.TaskInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: integer
+                    format: int32
+                course:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.v1.eva_task.CourseInfo'
 tags:
-    - name: Auth
+    - name: Task

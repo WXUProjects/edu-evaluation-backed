@@ -1,8 +1,14 @@
 package eva_task
 
 import (
+	"fmt"
+	"os"
+	"strconv"
+
 	"edu-evaluation-backed/internal/data/dal"
 	"edu-evaluation-backed/internal/data/model"
+
+	"github.com/xuri/excelize/v2"
 )
 
 // EvaTaskUseCase 评教任务业务用例
@@ -65,4 +71,123 @@ func NewEvaTaskUseCase(baseDal *dal.BaseInfoDal, evaTaskDal *dal.TaskDal, course
 		taskDal:   evaTaskDal,
 		courseDal: courseDal,
 	}
+}
+
+// GetTaskEvaluationResults 获取任务评教结果（用于导出）
+func (e *EvaTaskUseCase) GetTaskEvaluationResults(taskID uint) ([]dal.TeacherEvaluationResult, error) {
+	return e.taskDal.GetTaskEvaluationResults(taskID)
+}
+
+// ExportTaskResults 导出任务评教结果为 xlsx
+// taskID: 评教任务ID
+// 返回值: xlsx文件路径，错误信息
+func (e *EvaTaskUseCase) ExportTaskResults(taskID uint) (string, error) {
+	// 获取评教结果数据
+	results, _ := e.GetTaskEvaluationResults(taskID)
+
+	// 确保tmp目录存在
+	os.MkdirAll("./tmp", 0755)
+
+	// ========== 生成 xlsx ==========
+	f := excelize.NewFile()
+	defer f.Close()
+
+	sheetName := "评教结果"
+	index, _ := f.NewSheet(sheetName)
+	f.SetActiveSheet(index)
+
+	// 设置列宽
+	f.SetColWidth(sheetName, "A", "A", 8)   // 序号
+	f.SetColWidth(sheetName, "B", "B", 15)  // 工号
+	f.SetColWidth(sheetName, "C", "C", 25)  // 教师姓名
+	f.SetColWidth(sheetName, "D", "D", 20)  // 课程
+	f.SetColWidth(sheetName, "E", "E", 15)  // 班级名
+
+	// 计算最大题目数
+	maxQuestions := 0
+	for _, r := range results {
+		for _, scores := range r.QuestionScores {
+			if len(scores) > maxQuestions {
+				maxQuestions = len(scores)
+			}
+		}
+	}
+
+	// 设置样式
+	headerStyle, _ := f.NewStyle(&excelize.Style{
+		Alignment: &excelize.Alignment{Horizontal: "center"},
+		Border:   []excelize.Border{{Type: "left", Style: 1}, {Type: "right", Style: 1}, {Type: "top", Style: 1}, {Type: "bottom", Style: 1}},
+	})
+	dataStyle, _ := f.NewStyle(&excelize.Style{
+		Alignment: &excelize.Alignment{Horizontal: "center"},
+		Border:   []excelize.Border{{Type: "left", Style: 1}, {Type: "right", Style: 1}, {Type: "top", Style: 1}, {Type: "bottom", Style: 1}},
+	})
+
+	// 写入表头
+	headers := []interface{}{
+		"序号",
+		"工号",
+		"教师姓名",
+		"课程",
+		"班级名",
+		"平均分",
+	}
+	for i := 1; i <= maxQuestions; i++ {
+		headers = append(headers, "问题"+strconv.Itoa(i))
+	}
+	headerRow := 1
+	for col, h := range headers {
+		cell, _ := excelize.CoordinatesToCellName(col+1, headerRow)
+		f.SetCellValue(sheetName, cell, h)
+		f.SetCellStyle(sheetName, cell, cell, headerStyle)
+	}
+
+	// 写入数据
+	rowNum := 2
+	for idx, r := range results {
+		questionAvgs := make([]float64, maxQuestions)
+		for q := 0; q < maxQuestions; q++ {
+			var total float64
+			count := 0
+			for _, scores := range r.QuestionScores {
+				if q < len(scores) {
+					total += float64(scores[q])
+					count++
+				}
+			}
+			if count > 0 {
+				questionAvgs[q] = total / float64(count)
+			}
+		}
+
+		row := []interface{}{
+			idx + 1,
+			r.WorkNo,
+			r.TeacherName,
+			r.CourseName,
+			r.ClassName,
+			r.AvgScore,
+		}
+		for _, avg := range questionAvgs {
+			if avg > 0 {
+				row = append(row, fmt.Sprintf("%.1f", avg))
+			} else {
+				row = append(row, "-")
+			}
+		}
+
+		for col, val := range row {
+			cell, _ := excelize.CoordinatesToCellName(col+1, rowNum)
+			f.SetCellValue(sheetName, cell, val)
+			f.SetCellStyle(sheetName, cell, cell, dataStyle)
+		}
+		rowNum++
+	}
+
+	xlsxPath := "./tmp/评教结果.xlsx"
+	if err := f.SaveAs(xlsxPath); err != nil {
+		return "", err
+	}
+
+	return xlsxPath, nil
 }

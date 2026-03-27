@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-http v2.9.2
 // - protoc             v6.33.1
-// source: api/v1/eva_task/task.proto
+// source: v1/eva_task/task.proto
 
 package eva_task
 
@@ -22,6 +22,7 @@ const _ = http.SupportPackageIsVersion1
 const OperationTaskChangeStatus = "/api.v1.eva_task.Task/ChangeStatus"
 const OperationTaskCreateTask = "/api.v1.eva_task.Task/CreateTask"
 const OperationTaskDetail = "/api.v1.eva_task.Task/Detail"
+const OperationTaskExportTaskResults = "/api.v1.eva_task.Task/ExportTaskResults"
 const OperationTaskList = "/api.v1.eva_task.Task/List"
 const OperationTaskStudentTaskDetail = "/api.v1.eva_task.Task/StudentTaskDetail"
 const OperationTaskSubmitEvaluation = "/api.v1.eva_task.Task/SubmitEvaluation"
@@ -30,6 +31,7 @@ type TaskHTTPServer interface {
 	ChangeStatus(context.Context, *ChangeTaskStatusReq) (*ChangeTaskStatusResp, error)
 	CreateTask(context.Context, *CreateTaskReq) (*CreateTaskResp, error)
 	Detail(context.Context, *GetTaskReq) (*TaskInfo, error)
+	ExportTaskResults(context.Context, *ExportTaskResultsReq) (*ExportTaskResultsResp, error)
 	List(context.Context, *GetTaskListReq) (*GetTaskListResp, error)
 	StudentTaskDetail(context.Context, *StuTaskDetailReq) (*StuTaskDetailRes, error)
 	SubmitEvaluation(context.Context, *SubmitEvaluationReq) (*SubmitEvaluationResp, error)
@@ -43,6 +45,7 @@ func RegisterTaskHTTPServer(s *http.Server, srv TaskHTTPServer) {
 	r.GET("/api/v1/task/detail", _Task_Detail0_HTTP_Handler(srv))
 	r.POST("/api/v1/task/change_status", _Task_ChangeStatus0_HTTP_Handler(srv))
 	r.POST("/api/v1/task/submit_evaluation", _Task_SubmitEvaluation0_HTTP_Handler(srv))
+	r.GET("/api/v1/task/export", _Task_ExportTaskResults0_HTTP_Handler(srv))
 }
 
 func _Task_CreateTask0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
@@ -168,10 +171,30 @@ func _Task_SubmitEvaluation0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Cont
 	}
 }
 
+func _Task_ExportTaskResults0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ExportTaskResultsReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTaskExportTaskResults)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.ExportTaskResults(ctx, req.(*ExportTaskResultsReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ExportTaskResultsResp)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TaskHTTPClient interface {
 	ChangeStatus(ctx context.Context, req *ChangeTaskStatusReq, opts ...http.CallOption) (rsp *ChangeTaskStatusResp, err error)
 	CreateTask(ctx context.Context, req *CreateTaskReq, opts ...http.CallOption) (rsp *CreateTaskResp, err error)
 	Detail(ctx context.Context, req *GetTaskReq, opts ...http.CallOption) (rsp *TaskInfo, err error)
+	ExportTaskResults(ctx context.Context, req *ExportTaskResultsReq, opts ...http.CallOption) (rsp *ExportTaskResultsResp, err error)
 	List(ctx context.Context, req *GetTaskListReq, opts ...http.CallOption) (rsp *GetTaskListResp, err error)
 	StudentTaskDetail(ctx context.Context, req *StuTaskDetailReq, opts ...http.CallOption) (rsp *StuTaskDetailRes, err error)
 	SubmitEvaluation(ctx context.Context, req *SubmitEvaluationReq, opts ...http.CallOption) (rsp *SubmitEvaluationResp, err error)
@@ -216,6 +239,19 @@ func (c *TaskHTTPClientImpl) Detail(ctx context.Context, in *GetTaskReq, opts ..
 	pattern := "/api/v1/task/detail"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTaskDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *TaskHTTPClientImpl) ExportTaskResults(ctx context.Context, in *ExportTaskResultsReq, opts ...http.CallOption) (*ExportTaskResultsResp, error) {
+	var out ExportTaskResultsResp
+	pattern := "/api/v1/task/export"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTaskExportTaskResults))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

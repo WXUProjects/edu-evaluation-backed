@@ -40,6 +40,11 @@ service Task {
       body: "*"
     };
   }
+  rpc ExportTaskResults(ExportTaskResultsReq) returns (ExportTaskResultsResp) {
+    option (google.api.http) = {
+      get: "/api/v1/task/export"
+    };
+  }
 }
 message CourseInfo {
   string id = 1;
@@ -125,4 +130,13 @@ message SubmitEvaluationReq {
 
 message SubmitEvaluationResp {
   string message = 1;
+}
+
+message ExportTaskResultsReq {
+  uint32 taskId = 1;
+}
+
+message ExportTaskResultsResp {
+  string message = 1;
+  string filePath = 2;
 }
