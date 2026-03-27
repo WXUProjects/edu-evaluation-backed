@@ -19,7 +19,7 @@ type EvaTaskUseCase struct {
 // 首先根据ID列表查询课程信息，然后创建评教任务并关联这些课程
 // 返回值: 新创建的评教任务ID，错误信息
 func (e EvaTaskUseCase) CreateEvaTask(title string, courses []int32) (int32, error) {
-	// 根据课程ID查询课程信息
+	// 根据课程 ID 查询课程信息
 	coursesInfo, err := e.courseDal.QueryCourseByIds(courses)
 	if err != nil {
 		return 0, err

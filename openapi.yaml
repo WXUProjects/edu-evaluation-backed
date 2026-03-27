@@ -111,6 +111,58 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
+    /api/v1/task/student_task_detail:
+        get:
+            tags:
+                - Task
+            operationId: Task_StudentTaskDetail
+            parameters:
+                - name: taskId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: stuNo
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/StuTaskDetailRes'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /api/v1/task/submit_evaluation:
+        post:
+            tags:
+                - Task
+            operationId: Task_SubmitEvaluation
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SubmitEvaluationReq'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SubmitEvaluationResp'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
     schemas:
         ChangeTaskStatusReq:
@@ -127,6 +179,35 @@ components:
             properties:
                 message:
                     type: string
+        CourseInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                evaluationScore:
+                    type: integer
+                    format: int32
+                evaluationNum:
+                    type: integer
+                    format: int32
+                totalNum:
+                    type: integer
+                    format: int32
+                teacher:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CourseInfo_TeacherInfo'
+        CourseInfo_TeacherInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                hasEvaluation:
+                    type: boolean
         CreateTaskReq:
             type: object
             properties:
@@ -189,6 +270,41 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        StuTaskDetailRes:
+            type: object
+            properties:
+                message:
+                    type: string
+                course:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/CourseInfo'
+        SubmitEvaluationReq:
+            type: object
+            properties:
+                taskId:
+                    type: integer
+                    format: uint32
+                courseId:
+                    type: integer
+                    format: uint32
+                teacherId:
+                    type: integer
+                    format: uint32
+                stuNo:
+                    type: string
+                detailScore:
+                    type: string
+                score:
+                    type: integer
+                    format: int32
+                comment:
+                    type: string
+        SubmitEvaluationResp:
+            type: object
+            properties:
+                message:
+                    type: string
         TaskInfo:
             type: object
             properties:
@@ -202,22 +318,6 @@ components:
                 course:
                     type: array
                     items:
-                        $ref: '#/components/schemas/TaskInfo_CourseInfo'
-        TaskInfo_CourseInfo:
-            type: object
-            properties:
-                id:
-                    type: string
-                name:
-                    type: string
-                evaluationScore:
-                    type: integer
-                    format: int32
-                evaluationNum:
-                    type: integer
-                    format: int32
-                totalNum:
-                    type: integer
-                    format: int32
+                        $ref: '#/components/schemas/CourseInfo'
 tags:
     - name: Task

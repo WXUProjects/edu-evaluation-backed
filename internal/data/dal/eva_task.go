@@ -4,6 +4,7 @@ import (
 	"edu-evaluation-backed/internal/common/utils"
 	"edu-evaluation-backed/internal/data"
 	"edu-evaluation-backed/internal/data/model"
+	"errors"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -69,6 +70,67 @@ func (d *TaskDal) GetTaskDetail(taskID uint) (*model.EvaluationTask, error) {
 func (d *TaskDal) ChangeTaskStatus(taskID uint, status int) error {
 	err := d.db.Model(&model.EvaluationTask{}).Where("id = ?", taskID).Update("status", status).Error
 	return err
+}
+
+func (d *TaskDal) StudentTaskDetail(studentNo string, taskID uint) ([]model.Course, error) {
+	var courses []model.Course
+
+	// 1. 直接查询 Course 表
+	err := d.db.Debug().Model(&model.Course{}).
+		// 预加载老师信息（这是你需要的）
+		Preload("Teachers").
+		// 关键：关联评价任务表并过滤 taskID
+		Joins("JOIN evaluation_courses ec ON ec.course_id = courses.id").
+		// 关键：关联学生选课表并过滤 studentNo
+		Joins("JOIN course_students cs ON cs.course_id = courses.id").
+		Where("ec.evaluation_task_id = ? AND cs.student_student_no = ?", taskID, studentNo).
+		Find(&courses).Error
+
+	return courses, err
+}
+
+// GetTaskEvaluationDetail 获取任务评价详情
+func (d *TaskDal) GetTaskEvaluationDetail(taskID uint, courseID uint, studentNo string, teacherId uint) (model.EvaluationDetail, error) {
+	// 根据 studentNo 获取学生ID
+	student := model.Student{}
+	err := d.db.Where("student_no = ?", studentNo).First(&student).Error
+	r := model.EvaluationDetail{}
+	err = d.db.Where("task_id = ? AND course_id = ? AND student_id = ? AND teacher_id = ?", taskID, courseID, student.ID, teacherId).First(&r).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		r.ID = 0
+		return r, nil
+	}
+	return r, err
+}
+
+// SubmitEvaluation 提交评价
+func (d *TaskDal) SubmitEvaluation(taskID uint, courseID, teacherId uint, studentNo string, detail, summary string, score int) error {
+	// 先查询有没有评价过
+	r, err := d.GetTaskEvaluationDetail(taskID, courseID, studentNo, teacherId)
+	if err != nil {
+		return err
+	}
+	if r.ID != 0 {
+		return errors.New("已评价过")
+	}
+	student := model.Student{}
+	d.db.Where("student_no = ?", studentNo).First(&student)
+	dc := model.EvaluationDetail{
+		TaskId:    taskID,
+		CourseId:  courseID,
+		StudentId: student.ID,
+		TeacherId: teacherId,
+		Detail:    detail,
+		Score:     score,
+		Summary:   summary,
+	}
+	// 获取课程
+	course := model.Course{}
+	d.db.Where("id = ?", courseID).First(&course)
+	course.EvaluationNum += 1
+	course.EvaluationScore += score
+	d.db.Save(&course)
+	return d.db.Create(&dc).Error
 }
 
 // NewTaskDal 创建评教任务数据访问层实例

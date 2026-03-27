@@ -23,20 +23,26 @@ const OperationTaskChangeStatus = "/api.v1.eva_task.Task/ChangeStatus"
 const OperationTaskCreateTask = "/api.v1.eva_task.Task/CreateTask"
 const OperationTaskDetail = "/api.v1.eva_task.Task/Detail"
 const OperationTaskList = "/api.v1.eva_task.Task/List"
+const OperationTaskStudentTaskDetail = "/api.v1.eva_task.Task/StudentTaskDetail"
+const OperationTaskSubmitEvaluation = "/api.v1.eva_task.Task/SubmitEvaluation"
 
 type TaskHTTPServer interface {
 	ChangeStatus(context.Context, *ChangeTaskStatusReq) (*ChangeTaskStatusResp, error)
 	CreateTask(context.Context, *CreateTaskReq) (*CreateTaskResp, error)
 	Detail(context.Context, *GetTaskReq) (*TaskInfo, error)
 	List(context.Context, *GetTaskListReq) (*GetTaskListResp, error)
+	StudentTaskDetail(context.Context, *StuTaskDetailReq) (*StuTaskDetailRes, error)
+	SubmitEvaluation(context.Context, *SubmitEvaluationReq) (*SubmitEvaluationResp, error)
 }
 
 func RegisterTaskHTTPServer(s *http.Server, srv TaskHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/v1/task/create", _Task_CreateTask0_HTTP_Handler(srv))
 	r.GET("/api/v1/task/list", _Task_List0_HTTP_Handler(srv))
+	r.GET("/api/v1/task/student_task_detail", _Task_StudentTaskDetail0_HTTP_Handler(srv))
 	r.GET("/api/v1/task/detail", _Task_Detail0_HTTP_Handler(srv))
 	r.POST("/api/v1/task/change_status", _Task_ChangeStatus0_HTTP_Handler(srv))
+	r.POST("/api/v1/task/submit_evaluation", _Task_SubmitEvaluation0_HTTP_Handler(srv))
 }
 
 func _Task_CreateTask0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
@@ -76,6 +82,25 @@ func _Task_List0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
 			return err
 		}
 		reply := out.(*GetTaskListResp)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Task_StudentTaskDetail0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in StuTaskDetailReq
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTaskStudentTaskDetail)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.StudentTaskDetail(ctx, req.(*StuTaskDetailReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*StuTaskDetailRes)
 		return ctx.Result(200, reply)
 	}
 }
@@ -121,11 +146,35 @@ func _Task_ChangeStatus0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Task_SubmitEvaluation0_HTTP_Handler(srv TaskHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in SubmitEvaluationReq
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationTaskSubmitEvaluation)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.SubmitEvaluation(ctx, req.(*SubmitEvaluationReq))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*SubmitEvaluationResp)
+		return ctx.Result(200, reply)
+	}
+}
+
 type TaskHTTPClient interface {
 	ChangeStatus(ctx context.Context, req *ChangeTaskStatusReq, opts ...http.CallOption) (rsp *ChangeTaskStatusResp, err error)
 	CreateTask(ctx context.Context, req *CreateTaskReq, opts ...http.CallOption) (rsp *CreateTaskResp, err error)
 	Detail(ctx context.Context, req *GetTaskReq, opts ...http.CallOption) (rsp *TaskInfo, err error)
 	List(ctx context.Context, req *GetTaskListReq, opts ...http.CallOption) (rsp *GetTaskListResp, err error)
+	StudentTaskDetail(ctx context.Context, req *StuTaskDetailReq, opts ...http.CallOption) (rsp *StuTaskDetailRes, err error)
+	SubmitEvaluation(ctx context.Context, req *SubmitEvaluationReq, opts ...http.CallOption) (rsp *SubmitEvaluationResp, err error)
 }
 
 type TaskHTTPClientImpl struct {
@@ -182,6 +231,32 @@ func (c *TaskHTTPClientImpl) List(ctx context.Context, in *GetTaskListReq, opts 
 	opts = append(opts, http.Operation(OperationTaskList))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *TaskHTTPClientImpl) StudentTaskDetail(ctx context.Context, in *StuTaskDetailReq, opts ...http.CallOption) (*StuTaskDetailRes, error) {
+	var out StuTaskDetailRes
+	pattern := "/api/v1/task/student_task_detail"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationTaskStudentTaskDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *TaskHTTPClientImpl) SubmitEvaluation(ctx context.Context, in *SubmitEvaluationReq, opts ...http.CallOption) (*SubmitEvaluationResp, error) {
+	var out SubmitEvaluationResp
+	pattern := "/api/v1/task/submit_evaluation"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationTaskSubmitEvaluation))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

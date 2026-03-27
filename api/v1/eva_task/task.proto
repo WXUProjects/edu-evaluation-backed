@@ -18,6 +18,11 @@ service Task {
       get: "/api/v1/task/list"
     };
   }
+  rpc StudentTaskDetail(StuTaskDetailReq) returns (StuTaskDetailRes) {
+    option (google.api.http) = {
+      get: "/api/v1/task/student_task_detail"
+    };
+  }
   rpc Detail(GetTaskReq) returns (TaskInfo) {
     option (google.api.http) = {
       get: "/api/v1/task/detail"
@@ -29,19 +34,31 @@ service Task {
       body: "*"
     };
   }
+  rpc SubmitEvaluation(SubmitEvaluationReq) returns (SubmitEvaluationResp) {
+    option (google.api.http) = {
+      post: "/api/v1/task/submit_evaluation"
+      body: "*"
+    };
+  }
 }
-
+message CourseInfo {
+  string id = 1;
+  string name = 2;
+  int32 evaluationScore = 3;
+  int32 evaluationNum = 4;
+  int32 totalNum = 5;
+  message TeacherInfo {
+    string id = 1;
+    string name = 2;
+    bool hasEvaluation = 3;
+  }
+  repeated TeacherInfo teacher = 6;
+}
 message TaskInfo {
   string id = 1;
   string name = 2;
   int32 status = 3;
-  message CourseInfo {
-    string id = 1;
-    string name = 2;
-    int32 evaluationScore = 3;
-    int32 evaluationNum = 4;
-    int32 totalNum = 5;
-  }
+
   repeated CourseInfo course = 4;
 }
 
@@ -76,7 +93,6 @@ message GetTaskListResp {
     int64 total = 2;
   }
   d data = 2;
-
 }
 
 message ChangeTaskStatusReq {
@@ -85,5 +101,28 @@ message ChangeTaskStatusReq {
 }
 
 message ChangeTaskStatusResp {
+  string message = 1;
+}
+
+message StuTaskDetailReq {
+  uint32 taskId = 1;
+  string stuNo = 2;
+}
+message StuTaskDetailRes {
+  string message = 1;
+  repeated CourseInfo course = 2;
+}
+
+message SubmitEvaluationReq {
+  uint32 taskId = 1;
+  uint32 courseId = 2;
+  uint32 teacherId = 3;
+  string stuNo = 4;
+  string detailScore = 5;
+  int32 score = 6;
+  string comment = 7;
+}
+
+message SubmitEvaluationResp {
   string message = 1;
 }

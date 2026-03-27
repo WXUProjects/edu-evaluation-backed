@@ -64,9 +64,11 @@ type EvaluationDetail struct {
 	TaskId    uint `json:"task_id" gorm:"index;comment:评价任务id"`
 	CourseId  uint `json:"course_id" gorm:"index;comment:课程id"`
 	StudentId uint `json:"student_id" gorm:"index;comment:学生id"`
+	TeacherId uint `json:"teacher_id" gorm:"index;comment:教师id"`
 	// 这里的实体引用主要用于 Preload 查询，不影响表结构生成
 	Course  Course  `json:"-" gorm:"foreignKey:CourseId"`
 	Student Student `json:"student" gorm:"foreignKey:StudentId"`
 	Detail  string  `json:"detail" gorm:"type:text;comment:学生评价的json信息"`
+	Summary string  `json:"summary" gorm:"type:text;comment:学生总结信息"`
 	Score   int     `json:"score" gorm:"comment:本次评价折算后的总分"`
 }

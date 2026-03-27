@@ -6,6 +6,8 @@ import (
 	"edu-evaluation-backed/internal/biz/eva_task"
 	"edu-evaluation-backed/internal/data/dal"
 	"strconv"
+
+	"github.com/go-kratos/kratos/v2/log"
 )
 
 // EvaTaskService 评教任务服务
@@ -13,6 +15,48 @@ import (
 type EvaTaskService struct {
 	taskDal *dal.TaskDal
 	taskUC  *eva_task.EvaTaskUseCase
+}
+
+func (e EvaTaskService) SubmitEvaluation(ctx context.Context, req *eva_task2.SubmitEvaluationReq) (*eva_task2.SubmitEvaluationResp, error) {
+	err := e.taskDal.SubmitEvaluation(uint(req.TaskId), uint(req.CourseId), uint(req.TeacherId), req.StuNo, req.DetailScore, req.Comment, int(req.Score))
+	if err != nil {
+		return nil, err
+	}
+	return &eva_task2.SubmitEvaluationResp{
+		Message: "提交成功",
+	}, nil
+}
+
+// StudentTaskDetail 获取学生评教任务详情
+func (e EvaTaskService) StudentTaskDetail(ctx context.Context, req *eva_task2.StuTaskDetailReq) (*eva_task2.StuTaskDetailRes, error) {
+	c, err := e.taskDal.StudentTaskDetail(req.StuNo, uint(req.TaskId))
+	log.Info(c)
+	if err != nil {
+		return nil, err
+	}
+	cour := make([]*eva_task2.CourseInfo, 0)
+
+	for _, c := range c {
+		cour = append(cour, &eva_task2.CourseInfo{
+			Id:      strconv.Itoa(int(c.ID)),
+			Name:    c.CourseName + " - " + c.ClassName,
+			Teacher: make([]*eva_task2.CourseInfo_TeacherInfo, 0),
+		})
+		for _, t := range c.Teachers {
+			// 去查询该老师是否已评价过
+			det, _ := e.taskDal.GetTaskEvaluationDetail(uint(req.TaskId), c.ID, req.StuNo, t.ID)
+			cour[len(cour)-1].Teacher = append(cour[len(cour)-1].Teacher, &eva_task2.CourseInfo_TeacherInfo{
+				Id:            strconv.Itoa(int(t.ID)),
+				Name:          t.Name,
+				HasEvaluation: det.ID != 0,
+			})
+		}
+	}
+	resp := &eva_task2.StuTaskDetailRes{
+		Message: "success",
+		Course:  cour,
+	}
+	return resp, nil
 }
 
 // CreateTask 创建评教任务
@@ -50,9 +94,9 @@ func (e EvaTaskService) Detail(ctx context.Context, req *eva_task2.GetTaskReq) (
 	}
 
 	// 转换为proto结构
-	var courses []*eva_task2.TaskInfo_CourseInfo
+	var courses []*eva_task2.CourseInfo
 	for _, course := range task.Courses {
-		courseInfo := &eva_task2.TaskInfo_CourseInfo{
+		courseInfo := &eva_task2.CourseInfo{
 			Id:              strconv.Itoa(int(course.ID)),
 			Name:            course.CourseName + " - " + course.ClassName,
 			EvaluationScore: int32(course.EvaluationScore),

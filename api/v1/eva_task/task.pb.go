@@ -22,19 +22,103 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type CourseInfo struct {
+	state           protoimpl.MessageState    `protogen:"open.v1"`
+	Id              string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name            string                    `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	EvaluationScore int32                     `protobuf:"varint,3,opt,name=evaluationScore,proto3" json:"evaluationScore,omitempty"`
+	EvaluationNum   int32                     `protobuf:"varint,4,opt,name=evaluationNum,proto3" json:"evaluationNum,omitempty"`
+	TotalNum        int32                     `protobuf:"varint,5,opt,name=totalNum,proto3" json:"totalNum,omitempty"`
+	Teacher         []*CourseInfo_TeacherInfo `protobuf:"bytes,6,rep,name=teacher,proto3" json:"teacher,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *CourseInfo) Reset() {
+	*x = CourseInfo{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CourseInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CourseInfo) ProtoMessage() {}
+
+func (x *CourseInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CourseInfo.ProtoReflect.Descriptor instead.
+func (*CourseInfo) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *CourseInfo) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *CourseInfo) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CourseInfo) GetEvaluationScore() int32 {
+	if x != nil {
+		return x.EvaluationScore
+	}
+	return 0
+}
+
+func (x *CourseInfo) GetEvaluationNum() int32 {
+	if x != nil {
+		return x.EvaluationNum
+	}
+	return 0
+}
+
+func (x *CourseInfo) GetTotalNum() int32 {
+	if x != nil {
+		return x.TotalNum
+	}
+	return 0
+}
+
+func (x *CourseInfo) GetTeacher() []*CourseInfo_TeacherInfo {
+	if x != nil {
+		return x.Teacher
+	}
+	return nil
+}
+
 type TaskInfo struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Status        int32                  `protobuf:"varint,3,opt,name=status,proto3" json:"status,omitempty"`
-	Course        []*TaskInfo_CourseInfo `protobuf:"bytes,4,rep,name=course,proto3" json:"course,omitempty"`
+	Course        []*CourseInfo          `protobuf:"bytes,4,rep,name=course,proto3" json:"course,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TaskInfo) Reset() {
 	*x = TaskInfo{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[0]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -46,7 +130,7 @@ func (x *TaskInfo) String() string {
 func (*TaskInfo) ProtoMessage() {}
 
 func (x *TaskInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[0]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +143,7 @@ func (x *TaskInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TaskInfo.ProtoReflect.Descriptor instead.
 func (*TaskInfo) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{0}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *TaskInfo) GetId() string {
@@ -83,7 +167,7 @@ func (x *TaskInfo) GetStatus() int32 {
 	return 0
 }
 
-func (x *TaskInfo) GetCourse() []*TaskInfo_CourseInfo {
+func (x *TaskInfo) GetCourse() []*CourseInfo {
 	if x != nil {
 		return x.Course
 	}
@@ -100,7 +184,7 @@ type CreateTaskReq struct {
 
 func (x *CreateTaskReq) Reset() {
 	*x = CreateTaskReq{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[1]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -112,7 +196,7 @@ func (x *CreateTaskReq) String() string {
 func (*CreateTaskReq) ProtoMessage() {}
 
 func (x *CreateTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[1]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -125,7 +209,7 @@ func (x *CreateTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskReq.ProtoReflect.Descriptor instead.
 func (*CreateTaskReq) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{1}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *CreateTaskReq) GetName() string {
@@ -152,7 +236,7 @@ type CreateTaskResp struct {
 
 func (x *CreateTaskResp) Reset() {
 	*x = CreateTaskResp{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[2]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -164,7 +248,7 @@ func (x *CreateTaskResp) String() string {
 func (*CreateTaskResp) ProtoMessage() {}
 
 func (x *CreateTaskResp) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[2]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -177,7 +261,7 @@ func (x *CreateTaskResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskResp.ProtoReflect.Descriptor instead.
 func (*CreateTaskResp) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{2}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *CreateTaskResp) GetMessage() string {
@@ -203,7 +287,7 @@ type GetTaskReq struct {
 
 func (x *GetTaskReq) Reset() {
 	*x = GetTaskReq{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[3]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -215,7 +299,7 @@ func (x *GetTaskReq) String() string {
 func (*GetTaskReq) ProtoMessage() {}
 
 func (x *GetTaskReq) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[3]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -228,7 +312,7 @@ func (x *GetTaskReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskReq.ProtoReflect.Descriptor instead.
 func (*GetTaskReq) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{3}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetTaskReq) GetId() string {
@@ -249,7 +333,7 @@ type GetTaskListReq struct {
 
 func (x *GetTaskListReq) Reset() {
 	*x = GetTaskListReq{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[4]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -261,7 +345,7 @@ func (x *GetTaskListReq) String() string {
 func (*GetTaskListReq) ProtoMessage() {}
 
 func (x *GetTaskListReq) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[4]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -274,7 +358,7 @@ func (x *GetTaskListReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskListReq.ProtoReflect.Descriptor instead.
 func (*GetTaskListReq) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{4}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetTaskListReq) GetStatus() int32 {
@@ -308,7 +392,7 @@ type GetTaskListResp struct {
 
 func (x *GetTaskListResp) Reset() {
 	*x = GetTaskListResp{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[5]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -320,7 +404,7 @@ func (x *GetTaskListResp) String() string {
 func (*GetTaskListResp) ProtoMessage() {}
 
 func (x *GetTaskListResp) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[5]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -333,7 +417,7 @@ func (x *GetTaskListResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskListResp.ProtoReflect.Descriptor instead.
 func (*GetTaskListResp) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{5}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *GetTaskListResp) GetMessage() string {
@@ -360,7 +444,7 @@ type ChangeTaskStatusReq struct {
 
 func (x *ChangeTaskStatusReq) Reset() {
 	*x = ChangeTaskStatusReq{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -372,7 +456,7 @@ func (x *ChangeTaskStatusReq) String() string {
 func (*ChangeTaskStatusReq) ProtoMessage() {}
 
 func (x *ChangeTaskStatusReq) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[6]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -385,7 +469,7 @@ func (x *ChangeTaskStatusReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeTaskStatusReq.ProtoReflect.Descriptor instead.
 func (*ChangeTaskStatusReq) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{6}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *ChangeTaskStatusReq) GetId() int32 {
@@ -411,7 +495,7 @@ type ChangeTaskStatusResp struct {
 
 func (x *ChangeTaskStatusResp) Reset() {
 	*x = ChangeTaskStatusResp{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -423,7 +507,7 @@ func (x *ChangeTaskStatusResp) String() string {
 func (*ChangeTaskStatusResp) ProtoMessage() {}
 
 func (x *ChangeTaskStatusResp) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[7]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -436,7 +520,7 @@ func (x *ChangeTaskStatusResp) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChangeTaskStatusResp.ProtoReflect.Descriptor instead.
 func (*ChangeTaskStatusResp) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{7}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *ChangeTaskStatusResp) GetMessage() string {
@@ -446,32 +530,29 @@ func (x *ChangeTaskStatusResp) GetMessage() string {
 	return ""
 }
 
-type TaskInfo_CourseInfo struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name            string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	EvaluationScore int32                  `protobuf:"varint,3,opt,name=evaluationScore,proto3" json:"evaluationScore,omitempty"`
-	EvaluationNum   int32                  `protobuf:"varint,4,opt,name=evaluationNum,proto3" json:"evaluationNum,omitempty"`
-	TotalNum        int32                  `protobuf:"varint,5,opt,name=totalNum,proto3" json:"totalNum,omitempty"`
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+type StuTaskDetailReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        uint32                 `protobuf:"varint,1,opt,name=taskId,proto3" json:"taskId,omitempty"`
+	StuNo         string                 `protobuf:"bytes,2,opt,name=stuNo,proto3" json:"stuNo,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
-func (x *TaskInfo_CourseInfo) Reset() {
-	*x = TaskInfo_CourseInfo{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
+func (x *StuTaskDetailReq) Reset() {
+	*x = StuTaskDetailReq{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *TaskInfo_CourseInfo) String() string {
+func (x *StuTaskDetailReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*TaskInfo_CourseInfo) ProtoMessage() {}
+func (*StuTaskDetailReq) ProtoMessage() {}
 
-func (x *TaskInfo_CourseInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[8]
+func (x *StuTaskDetailReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -482,44 +563,271 @@ func (x *TaskInfo_CourseInfo) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use TaskInfo_CourseInfo.ProtoReflect.Descriptor instead.
-func (*TaskInfo_CourseInfo) Descriptor() ([]byte, []int) {
+// Deprecated: Use StuTaskDetailReq.ProtoReflect.Descriptor instead.
+func (*StuTaskDetailReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *StuTaskDetailReq) GetTaskId() uint32 {
+	if x != nil {
+		return x.TaskId
+	}
+	return 0
+}
+
+func (x *StuTaskDetailReq) GetStuNo() string {
+	if x != nil {
+		return x.StuNo
+	}
+	return ""
+}
+
+type StuTaskDetailRes struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	Course        []*CourseInfo          `protobuf:"bytes,2,rep,name=course,proto3" json:"course,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *StuTaskDetailRes) Reset() {
+	*x = StuTaskDetailRes{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *StuTaskDetailRes) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*StuTaskDetailRes) ProtoMessage() {}
+
+func (x *StuTaskDetailRes) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use StuTaskDetailRes.ProtoReflect.Descriptor instead.
+func (*StuTaskDetailRes) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *StuTaskDetailRes) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *StuTaskDetailRes) GetCourse() []*CourseInfo {
+	if x != nil {
+		return x.Course
+	}
+	return nil
+}
+
+type SubmitEvaluationReq struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        uint32                 `protobuf:"varint,1,opt,name=taskId,proto3" json:"taskId,omitempty"`
+	CourseId      uint32                 `protobuf:"varint,2,opt,name=courseId,proto3" json:"courseId,omitempty"`
+	TeacherId     uint32                 `protobuf:"varint,3,opt,name=teacherId,proto3" json:"teacherId,omitempty"`
+	StuNo         string                 `protobuf:"bytes,4,opt,name=stuNo,proto3" json:"stuNo,omitempty"`
+	DetailScore   string                 `protobuf:"bytes,5,opt,name=detailScore,proto3" json:"detailScore,omitempty"`
+	Score         int32                  `protobuf:"varint,6,opt,name=score,proto3" json:"score,omitempty"`
+	Comment       string                 `protobuf:"bytes,7,opt,name=comment,proto3" json:"comment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitEvaluationReq) Reset() {
+	*x = SubmitEvaluationReq{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitEvaluationReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitEvaluationReq) ProtoMessage() {}
+
+func (x *SubmitEvaluationReq) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitEvaluationReq.ProtoReflect.Descriptor instead.
+func (*SubmitEvaluationReq) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *SubmitEvaluationReq) GetTaskId() uint32 {
+	if x != nil {
+		return x.TaskId
+	}
+	return 0
+}
+
+func (x *SubmitEvaluationReq) GetCourseId() uint32 {
+	if x != nil {
+		return x.CourseId
+	}
+	return 0
+}
+
+func (x *SubmitEvaluationReq) GetTeacherId() uint32 {
+	if x != nil {
+		return x.TeacherId
+	}
+	return 0
+}
+
+func (x *SubmitEvaluationReq) GetStuNo() string {
+	if x != nil {
+		return x.StuNo
+	}
+	return ""
+}
+
+func (x *SubmitEvaluationReq) GetDetailScore() string {
+	if x != nil {
+		return x.DetailScore
+	}
+	return ""
+}
+
+func (x *SubmitEvaluationReq) GetScore() int32 {
+	if x != nil {
+		return x.Score
+	}
+	return 0
+}
+
+func (x *SubmitEvaluationReq) GetComment() string {
+	if x != nil {
+		return x.Comment
+	}
+	return ""
+}
+
+type SubmitEvaluationResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SubmitEvaluationResp) Reset() {
+	*x = SubmitEvaluationResp{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SubmitEvaluationResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SubmitEvaluationResp) ProtoMessage() {}
+
+func (x *SubmitEvaluationResp) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SubmitEvaluationResp.ProtoReflect.Descriptor instead.
+func (*SubmitEvaluationResp) Descriptor() ([]byte, []int) {
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *SubmitEvaluationResp) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+type CourseInfo_TeacherInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	HasEvaluation bool                   `protobuf:"varint,3,opt,name=hasEvaluation,proto3" json:"hasEvaluation,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CourseInfo_TeacherInfo) Reset() {
+	*x = CourseInfo_TeacherInfo{}
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CourseInfo_TeacherInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CourseInfo_TeacherInfo) ProtoMessage() {}
+
+func (x *CourseInfo_TeacherInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CourseInfo_TeacherInfo.ProtoReflect.Descriptor instead.
+func (*CourseInfo_TeacherInfo) Descriptor() ([]byte, []int) {
 	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{0, 0}
 }
 
-func (x *TaskInfo_CourseInfo) GetId() string {
+func (x *CourseInfo_TeacherInfo) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-func (x *TaskInfo_CourseInfo) GetName() string {
+func (x *CourseInfo_TeacherInfo) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *TaskInfo_CourseInfo) GetEvaluationScore() int32 {
+func (x *CourseInfo_TeacherInfo) GetHasEvaluation() bool {
 	if x != nil {
-		return x.EvaluationScore
+		return x.HasEvaluation
 	}
-	return 0
-}
-
-func (x *TaskInfo_CourseInfo) GetEvaluationNum() int32 {
-	if x != nil {
-		return x.EvaluationNum
-	}
-	return 0
-}
-
-func (x *TaskInfo_CourseInfo) GetTotalNum() int32 {
-	if x != nil {
-		return x.TotalNum
-	}
-	return 0
+	return false
 }
 
 type CreateTaskRespD struct {
@@ -531,7 +839,7 @@ type CreateTaskRespD struct {
 
 func (x *CreateTaskRespD) Reset() {
 	*x = CreateTaskRespD{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -543,7 +851,7 @@ func (x *CreateTaskRespD) String() string {
 func (*CreateTaskRespD) ProtoMessage() {}
 
 func (x *CreateTaskRespD) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[9]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -556,7 +864,7 @@ func (x *CreateTaskRespD) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateTaskRespD.ProtoReflect.Descriptor instead.
 func (*CreateTaskRespD) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{2, 0}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{3, 0}
 }
 
 func (x *CreateTaskRespD) GetId() string {
@@ -576,7 +884,7 @@ type GetTaskListRespD struct {
 
 func (x *GetTaskListRespD) Reset() {
 	*x = GetTaskListRespD{}
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -588,7 +896,7 @@ func (x *GetTaskListRespD) String() string {
 func (*GetTaskListRespD) ProtoMessage() {}
 
 func (x *GetTaskListRespD) ProtoReflect() protoreflect.Message {
-	mi := &file_api_v1_eva_task_task_proto_msgTypes[10]
+	mi := &file_api_v1_eva_task_task_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -601,7 +909,7 @@ func (x *GetTaskListRespD) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTaskListRespD.ProtoReflect.Descriptor instead.
 func (*GetTaskListRespD) Descriptor() ([]byte, []int) {
-	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{5, 0}
+	return file_api_v1_eva_task_task_proto_rawDescGZIP(), []int{6, 0}
 }
 
 func (x *GetTaskListRespD) GetTasks() []*TaskInfo {
@@ -622,19 +930,24 @@ var File_api_v1_eva_task_task_proto protoreflect.FileDescriptor
 
 const file_api_v1_eva_task_task_proto_rawDesc = "" +
 	"\n" +
-	"\x1aapi/v1/eva_task/task.proto\x12\x0fapi.v1.eva_task\x1a\x1cgoogle/api/annotations.proto\"\xa3\x02\n" +
-	"\bTaskInfo\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
-	"\x06status\x18\x03 \x01(\x05R\x06status\x12<\n" +
-	"\x06course\x18\x04 \x03(\v2$.api.v1.eva_task.TaskInfo.CourseInfoR\x06course\x1a\x9c\x01\n" +
+	"\x1aapi/v1/eva_task/task.proto\x12\x0fapi.v1.eva_task\x1a\x1cgoogle/api/annotations.proto\"\xb8\x02\n" +
 	"\n" +
 	"CourseInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12(\n" +
 	"\x0fevaluationScore\x18\x03 \x01(\x05R\x0fevaluationScore\x12$\n" +
 	"\revaluationNum\x18\x04 \x01(\x05R\revaluationNum\x12\x1a\n" +
-	"\btotalNum\x18\x05 \x01(\x05R\btotalNum\"A\n" +
+	"\btotalNum\x18\x05 \x01(\x05R\btotalNum\x12A\n" +
+	"\ateacher\x18\x06 \x03(\v2'.api.v1.eva_task.CourseInfo.TeacherInfoR\ateacher\x1aW\n" +
+	"\vTeacherInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12$\n" +
+	"\rhasEvaluation\x18\x03 \x01(\bR\rhasEvaluation\"{\n" +
+	"\bTaskInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x16\n" +
+	"\x06status\x18\x03 \x01(\x05R\x06status\x123\n" +
+	"\x06course\x18\x04 \x03(\v2\x1b.api.v1.eva_task.CourseInfoR\x06course\"A\n" +
 	"\rCreateTaskReq\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1c\n" +
 	"\tcourseIds\x18\x02 \x03(\x05R\tcourseIds\"v\n" +
@@ -660,13 +973,31 @@ const file_api_v1_eva_task_task_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\x05R\x02id\x12\x16\n" +
 	"\x06status\x18\x02 \x01(\x05R\x06status\"0\n" +
 	"\x14ChangeTaskStatusResp\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2\xbf\x03\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\"@\n" +
+	"\x10StuTaskDetailReq\x12\x16\n" +
+	"\x06taskId\x18\x01 \x01(\rR\x06taskId\x12\x14\n" +
+	"\x05stuNo\x18\x02 \x01(\tR\x05stuNo\"a\n" +
+	"\x10StuTaskDetailRes\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage\x123\n" +
+	"\x06course\x18\x02 \x03(\v2\x1b.api.v1.eva_task.CourseInfoR\x06course\"\xcf\x01\n" +
+	"\x13SubmitEvaluationReq\x12\x16\n" +
+	"\x06taskId\x18\x01 \x01(\rR\x06taskId\x12\x1a\n" +
+	"\bcourseId\x18\x02 \x01(\rR\bcourseId\x12\x1c\n" +
+	"\tteacherId\x18\x03 \x01(\rR\tteacherId\x12\x14\n" +
+	"\x05stuNo\x18\x04 \x01(\tR\x05stuNo\x12 \n" +
+	"\vdetailScore\x18\x05 \x01(\tR\vdetailScore\x12\x14\n" +
+	"\x05score\x18\x06 \x01(\x05R\x05score\x12\x18\n" +
+	"\acomment\x18\a \x01(\tR\acomment\"0\n" +
+	"\x14SubmitEvaluationResp\x12\x18\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\xd2\x05\n" +
 	"\x04Task\x12m\n" +
 	"\n" +
 	"CreateTask\x12\x1e.api.v1.eva_task.CreateTaskReq\x1a\x1f.api.v1.eva_task.CreateTaskResp\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/api/v1/task/create\x12d\n" +
-	"\x04List\x12\x1f.api.v1.eva_task.GetTaskListReq\x1a .api.v1.eva_task.GetTaskListResp\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/task/list\x12]\n" +
+	"\x04List\x12\x1f.api.v1.eva_task.GetTaskListReq\x1a .api.v1.eva_task.GetTaskListResp\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/api/v1/task/list\x12\x83\x01\n" +
+	"\x11StudentTaskDetail\x12!.api.v1.eva_task.StuTaskDetailReq\x1a!.api.v1.eva_task.StuTaskDetailRes\"(\x82\xd3\xe4\x93\x02\"\x12 /api/v1/task/student_task_detail\x12]\n" +
 	"\x06Detail\x12\x1b.api.v1.eva_task.GetTaskReq\x1a\x19.api.v1.eva_task.TaskInfo\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/api/v1/task/detail\x12\x82\x01\n" +
-	"\fChangeStatus\x12$.api.v1.eva_task.ChangeTaskStatusReq\x1a%.api.v1.eva_task.ChangeTaskStatusResp\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/task/change_statusBC\n" +
+	"\fChangeStatus\x12$.api.v1.eva_task.ChangeTaskStatusReq\x1a%.api.v1.eva_task.ChangeTaskStatusResp\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/task/change_status\x12\x8a\x01\n" +
+	"\x10SubmitEvaluation\x12$.api.v1.eva_task.SubmitEvaluationReq\x1a%.api.v1.eva_task.SubmitEvaluationResp\")\x82\xd3\xe4\x93\x02#:\x01*\"\x1e/api/v1/task/submit_evaluationBC\n" +
 	"\x0fapi.v1.eva_taskP\x01Z.edu-evaluation-backed/api/v1/eva_task;eva_taskb\x06proto3"
 
 var (
@@ -681,38 +1012,49 @@ func file_api_v1_eva_task_task_proto_rawDescGZIP() []byte {
 	return file_api_v1_eva_task_task_proto_rawDescData
 }
 
-var file_api_v1_eva_task_task_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_v1_eva_task_task_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
 var file_api_v1_eva_task_task_proto_goTypes = []any{
-	(*TaskInfo)(nil),             // 0: api.v1.eva_task.TaskInfo
-	(*CreateTaskReq)(nil),        // 1: api.v1.eva_task.CreateTaskReq
-	(*CreateTaskResp)(nil),       // 2: api.v1.eva_task.CreateTaskResp
-	(*GetTaskReq)(nil),           // 3: api.v1.eva_task.GetTaskReq
-	(*GetTaskListReq)(nil),       // 4: api.v1.eva_task.GetTaskListReq
-	(*GetTaskListResp)(nil),      // 5: api.v1.eva_task.GetTaskListResp
-	(*ChangeTaskStatusReq)(nil),  // 6: api.v1.eva_task.ChangeTaskStatusReq
-	(*ChangeTaskStatusResp)(nil), // 7: api.v1.eva_task.ChangeTaskStatusResp
-	(*TaskInfo_CourseInfo)(nil),  // 8: api.v1.eva_task.TaskInfo.CourseInfo
-	(*CreateTaskRespD)(nil),      // 9: api.v1.eva_task.CreateTaskResp.d
-	(*GetTaskListRespD)(nil),     // 10: api.v1.eva_task.GetTaskListResp.d
+	(*CourseInfo)(nil),             // 0: api.v1.eva_task.CourseInfo
+	(*TaskInfo)(nil),               // 1: api.v1.eva_task.TaskInfo
+	(*CreateTaskReq)(nil),          // 2: api.v1.eva_task.CreateTaskReq
+	(*CreateTaskResp)(nil),         // 3: api.v1.eva_task.CreateTaskResp
+	(*GetTaskReq)(nil),             // 4: api.v1.eva_task.GetTaskReq
+	(*GetTaskListReq)(nil),         // 5: api.v1.eva_task.GetTaskListReq
+	(*GetTaskListResp)(nil),        // 6: api.v1.eva_task.GetTaskListResp
+	(*ChangeTaskStatusReq)(nil),    // 7: api.v1.eva_task.ChangeTaskStatusReq
+	(*ChangeTaskStatusResp)(nil),   // 8: api.v1.eva_task.ChangeTaskStatusResp
+	(*StuTaskDetailReq)(nil),       // 9: api.v1.eva_task.StuTaskDetailReq
+	(*StuTaskDetailRes)(nil),       // 10: api.v1.eva_task.StuTaskDetailRes
+	(*SubmitEvaluationReq)(nil),    // 11: api.v1.eva_task.SubmitEvaluationReq
+	(*SubmitEvaluationResp)(nil),   // 12: api.v1.eva_task.SubmitEvaluationResp
+	(*CourseInfo_TeacherInfo)(nil), // 13: api.v1.eva_task.CourseInfo.TeacherInfo
+	(*CreateTaskRespD)(nil),        // 14: api.v1.eva_task.CreateTaskResp.d
+	(*GetTaskListRespD)(nil),       // 15: api.v1.eva_task.GetTaskListResp.d
 }
 var file_api_v1_eva_task_task_proto_depIdxs = []int32{
-	8,  // 0: api.v1.eva_task.TaskInfo.course:type_name -> api.v1.eva_task.TaskInfo.CourseInfo
-	9,  // 1: api.v1.eva_task.CreateTaskResp.data:type_name -> api.v1.eva_task.CreateTaskResp.d
-	10, // 2: api.v1.eva_task.GetTaskListResp.data:type_name -> api.v1.eva_task.GetTaskListResp.d
-	0,  // 3: api.v1.eva_task.GetTaskListResp.d.tasks:type_name -> api.v1.eva_task.TaskInfo
-	1,  // 4: api.v1.eva_task.Task.CreateTask:input_type -> api.v1.eva_task.CreateTaskReq
-	4,  // 5: api.v1.eva_task.Task.List:input_type -> api.v1.eva_task.GetTaskListReq
-	3,  // 6: api.v1.eva_task.Task.Detail:input_type -> api.v1.eva_task.GetTaskReq
-	6,  // 7: api.v1.eva_task.Task.ChangeStatus:input_type -> api.v1.eva_task.ChangeTaskStatusReq
-	2,  // 8: api.v1.eva_task.Task.CreateTask:output_type -> api.v1.eva_task.CreateTaskResp
-	5,  // 9: api.v1.eva_task.Task.List:output_type -> api.v1.eva_task.GetTaskListResp
-	0,  // 10: api.v1.eva_task.Task.Detail:output_type -> api.v1.eva_task.TaskInfo
-	7,  // 11: api.v1.eva_task.Task.ChangeStatus:output_type -> api.v1.eva_task.ChangeTaskStatusResp
-	8,  // [8:12] is the sub-list for method output_type
-	4,  // [4:8] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	13, // 0: api.v1.eva_task.CourseInfo.teacher:type_name -> api.v1.eva_task.CourseInfo.TeacherInfo
+	0,  // 1: api.v1.eva_task.TaskInfo.course:type_name -> api.v1.eva_task.CourseInfo
+	14, // 2: api.v1.eva_task.CreateTaskResp.data:type_name -> api.v1.eva_task.CreateTaskResp.d
+	15, // 3: api.v1.eva_task.GetTaskListResp.data:type_name -> api.v1.eva_task.GetTaskListResp.d
+	0,  // 4: api.v1.eva_task.StuTaskDetailRes.course:type_name -> api.v1.eva_task.CourseInfo
+	1,  // 5: api.v1.eva_task.GetTaskListResp.d.tasks:type_name -> api.v1.eva_task.TaskInfo
+	2,  // 6: api.v1.eva_task.Task.CreateTask:input_type -> api.v1.eva_task.CreateTaskReq
+	5,  // 7: api.v1.eva_task.Task.List:input_type -> api.v1.eva_task.GetTaskListReq
+	9,  // 8: api.v1.eva_task.Task.StudentTaskDetail:input_type -> api.v1.eva_task.StuTaskDetailReq
+	4,  // 9: api.v1.eva_task.Task.Detail:input_type -> api.v1.eva_task.GetTaskReq
+	7,  // 10: api.v1.eva_task.Task.ChangeStatus:input_type -> api.v1.eva_task.ChangeTaskStatusReq
+	11, // 11: api.v1.eva_task.Task.SubmitEvaluation:input_type -> api.v1.eva_task.SubmitEvaluationReq
+	3,  // 12: api.v1.eva_task.Task.CreateTask:output_type -> api.v1.eva_task.CreateTaskResp
+	6,  // 13: api.v1.eva_task.Task.List:output_type -> api.v1.eva_task.GetTaskListResp
+	10, // 14: api.v1.eva_task.Task.StudentTaskDetail:output_type -> api.v1.eva_task.StuTaskDetailRes
+	1,  // 15: api.v1.eva_task.Task.Detail:output_type -> api.v1.eva_task.TaskInfo
+	8,  // 16: api.v1.eva_task.Task.ChangeStatus:output_type -> api.v1.eva_task.ChangeTaskStatusResp
+	12, // 17: api.v1.eva_task.Task.SubmitEvaluation:output_type -> api.v1.eva_task.SubmitEvaluationResp
+	12, // [12:18] is the sub-list for method output_type
+	6,  // [6:12] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_api_v1_eva_task_task_proto_init() }
@@ -726,7 +1068,7 @@ func file_api_v1_eva_task_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_api_v1_eva_task_task_proto_rawDesc), len(file_api_v1_eva_task_task_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   11,
+			NumMessages:   16,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
