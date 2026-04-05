@@ -34,13 +34,13 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 		return nil, nil, err
 	}
 	baseInfoDal := dal.NewBaseInfoDal(dataData)
-	baseDal := dal.NewBaseDal(dataData)
 	authUseCase := auth.NewAuthUseCase(baseInfoDal)
 	authService := auth2.NewAuthService(authUseCase)
 	studentUseCase := base_info.NewStudentUseCase(baseInfoDal)
 	studentService := base_info2.NewStudentService(studentUseCase, baseInfoDal)
 	teacherUseCase := base_info.NewTeacherUseCase(baseInfoDal)
 	teacherService := base_info2.NewTeacherService(teacherUseCase, baseInfoDal)
+	baseDal := dal.NewBaseDal(dataData)
 	courseDal := dal.NewCourseDal(dataData)
 	courseUseCase := base_info.NewCourseUseCase(courseDal)
 	courseService := base_info2.NewCourseService(baseDal, courseDal, courseUseCase)

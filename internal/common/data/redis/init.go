@@ -21,6 +21,9 @@ func InitRedis(conf *conf.Data) *redis.Client {
 		DB:           1,
 		ReadTimeout:  time.Duration(conf.Redis.ReadTimeout.Nanos),
 		WriteTimeout: time.Duration(conf.Redis.WriteTimeout.Nanos),
+		PoolSize:     50,
+		MinIdleConns: 10,
+		MaxRetries:   2,
 	})
 	return rdb
 }

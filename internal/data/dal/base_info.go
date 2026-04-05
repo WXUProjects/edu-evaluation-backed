@@ -1,10 +1,14 @@
 package dal
 
 import (
+	"context"
+	"errors"
+	"time"
+
+	"edu-evaluation-backed/internal/common/data/cache"
 	"edu-evaluation-backed/internal/common/utils"
 	"edu-evaluation-backed/internal/data"
 	"edu-evaluation-backed/internal/data/model"
-	"errors"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
@@ -12,10 +16,10 @@ import (
 )
 
 // BaseInfoDal 基础信息数据访问层
-// 处理学生和教师信息的数据库操作
 type BaseInfoDal struct {
 	db  *gorm.DB
 	rdb *redis.Client
+	hc  *cache.HealthChecker
 }
 
 // NewBaseInfoDal 创建基础信息数据访问层实例
@@ -23,6 +27,7 @@ func NewBaseInfoDal(data *data.Data) *BaseInfoDal {
 	return &BaseInfoDal{
 		db:  data.DB,
 		rdb: data.RDB,
+		hc:  data.HC,
 	}
 }
 
@@ -89,7 +94,6 @@ func (d *BaseInfoDal) UpdateStudent(id uint, name, sex, studentNo, idCardNo *str
 		return nil, err
 	}
 
-	// 检查学号唯一性
 	if studentNo != nil && *studentNo != student.StudentNo {
 		var count int64
 		if err := d.db.Model(&model.Student{}).Where("student_no = ? AND id != ?", *studentNo, id).Count(&count).Error; err != nil {
@@ -101,10 +105,10 @@ func (d *BaseInfoDal) UpdateStudent(id uint, name, sex, studentNo, idCardNo *str
 	}
 
 	updates := buildUpdateMap(map[string]*string{
-		"name":         name,
-		"sex":          sex,
-		"student_no":   studentNo,
-		"id_card_no":   idCardNo,
+		"name":       name,
+		"sex":        sex,
+		"student_no": studentNo,
+		"id_card_no": idCardNo,
 	})
 	if len(updates) > 0 {
 		if err := d.db.Model(&student).Updates(updates).Error; err != nil {
@@ -138,7 +142,6 @@ func (d *BaseInfoDal) UpdateTeacher(id uint, name, sex, workNo, email *string) (
 		return nil, err
 	}
 
-	// 检查工号唯一性
 	if workNo != nil && *workNo != teacher.WorkNo {
 		var count int64
 		if err := d.db.Model(&model.Teacher{}).Where("work_no = ? AND id != ?", *workNo, id).Count(&count).Error; err != nil {
@@ -150,10 +153,10 @@ func (d *BaseInfoDal) UpdateTeacher(id uint, name, sex, workNo, email *string) (
 	}
 
 	updates := buildUpdateMap(map[string]*string{
-		"name":     name,
-		"sex":      sex,
-		"work_no":  workNo,
-		"email":    email,
+		"name":    name,
+		"sex":     sex,
+		"work_no": workNo,
+		"email":   email,
 	})
 	if len(updates) > 0 {
 		if err := d.db.Model(&teacher).Updates(updates).Error; err != nil {
@@ -188,9 +191,6 @@ func buildUpdateMap(fields map[string]*string) map[string]interface{} {
 }
 
 // AdminLogin 管理员登录验证
-// username: 管理员用户名
-// password: 密码
-// 返回值: 管理员信息，错误信息
 func (d *BaseInfoDal) AdminLogin(username, password string) (*model.Admin, error) {
 	var admin model.Admin
 	err := d.db.Where("username = ? AND password = ?", username, password).First(&admin).Error
@@ -200,39 +200,44 @@ func (d *BaseInfoDal) AdminLogin(username, password string) (*model.Admin, error
 	return &admin, nil
 }
 
-// StudentLogin 学生登录验证
-// stuNo: 学号
-// cardNo: 身份证号
-// taskId: 评教任务ID
-// 返回值: 学生信息，错误信息
-// 只有学生属于该task中任意一门课程时才能登录成功
+// StudentLogin 学生登录验证（带限流）
 func (d *BaseInfoDal) StudentLogin(stuNo, cardNo string, taskId uint) (*model.Student, error) {
-	// 1. 先验证学生身份（学号和身份证）
+	// 登录限流：15分钟内最多5次
+	ctx := context.Background()
+	rateKey := cache.LoginRateKey(stuNo)
+	count, allowed, err := cache.CheckAndSetRateLimit(ctx, d.rdb, d.hc, rateKey, 5, 15*time.Minute)
+	if err != nil {
+		// 限流检查失败不阻塞登录
+		_ = err
+	}
+	if !allowed {
+		return nil, errors.New("登录尝试过于频繁，请15分钟后再试")
+	}
+
+	// 1. 验证学生身份
 	var student model.Student
-	err := d.db.Where("student_no = ? AND id_card_no = ?", stuNo, cardNo).First(&student).Error
+	err = d.db.Where("student_no = ? AND id_card_no = ?", stuNo, cardNo).First(&student).Error
 	if err != nil {
 		return nil, errors.New("学号或身份证号错误")
 	}
 
-	// 2. 核心：一条 SQL 验证该学生是否在指定 Task 的范围内
-	// 逻辑：寻找一门课，它既在 Task 关联中，又在学生的选课名单中
-	var count int64
+	// 2. 验证学生是否在指定 Task 范围内
+	var count2 int64
 	err = d.db.Table("courses c").
-		// 关联任务中间表
 		Joins("INNER JOIN evaluation_courses ec ON c.id = ec.course_id").
-		// 关联学生中间表（注意字段名是 student_student_no）
 		Joins("INNER JOIN course_students cs ON c.id = cs.course_id").
 		Where("ec.evaluation_task_id = ? AND cs.student_student_no = ?", taskId, student.StudentNo).
-		Count(&count).Error
+		Count(&count2).Error
 
 	if err != nil {
 		return nil, err
 	}
 
-	if count == 0 {
+	if count2 == 0 {
 		return nil, errors.New("您不在本次评教范围内或该任务暂无课程")
 	}
 
+	_ = count
 	return &student, nil
 }
 
@@ -247,7 +252,6 @@ func (d *BaseInfoDal) GetStudentByStudentNo(stuNo string) (*model.Student, error
 }
 
 // AdminChangePassword 管理员修改密码
-// 先验证用户名+旧密码，验证通过后更新密码
 func (d *BaseInfoDal) AdminChangePassword(username, oldPassword, newPassword string) error {
 	var admin model.Admin
 	err := d.db.Where("username = ? AND password = ?", username, oldPassword).First(&admin).Error

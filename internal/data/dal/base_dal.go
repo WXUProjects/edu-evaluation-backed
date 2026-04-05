@@ -1,6 +1,7 @@
 package dal
 
 import (
+	"edu-evaluation-backed/internal/common/data/cache"
 	"edu-evaluation-backed/internal/common/utils"
 	"edu-evaluation-backed/internal/data"
 	"edu-evaluation-backed/internal/data/model"
@@ -16,6 +17,7 @@ import (
 type BaseDal struct {
 	db  *gorm.DB
 	rdb *redis.Client
+	hc  *cache.HealthChecker
 }
 
 // NewBaseDal 创建通用数据访问基础层
@@ -23,6 +25,7 @@ func NewBaseDal(data *data.Data) *BaseDal {
 	return &BaseDal{
 		db:  data.DB,
 		rdb: data.RDB,
+		hc:  data.HC,
 	}
 }
 

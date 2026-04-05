@@ -1,7 +1,11 @@
 package data
 
 import (
+	"context"
+	"time"
+
 	gorm2 "edu-evaluation-backed/internal/common/data/gorm"
+	"edu-evaluation-backed/internal/common/data/cache"
 	redis2 "edu-evaluation-backed/internal/common/data/redis"
 	"edu-evaluation-backed/internal/conf"
 	"edu-evaluation-backed/internal/data/model"
@@ -17,12 +21,14 @@ var ProviderSet = wire.NewSet(
 	NewData,
 	NewDataDB,
 	NewDataRDB,
+	NewHealthChecker,
 )
 
 // Data 数据层上下文，持有数据库和 Redis 连接
 type Data struct {
 	DB  *gorm.DB
 	RDB *redis.Client
+	HC  *cache.HealthChecker
 }
 
 // NewDataDB 从 Data 中提取 GORM 数据库连接
@@ -57,12 +63,25 @@ func NewDataRDB(data *Data) *redis.Client {
 //   - func() 清理函数，用于关闭数据库连接
 //   - error 初始化失败时返回错误
 func NewData(c *conf.Data) (*Data, func(), error) {
-	data := &Data{DB: gorm2.InitGorm(c), RDB: redis2.InitRedis(c)}
+	db := gorm2.InitGorm(c)
+	rdb := redis2.InitRedis(c)
+
+	// Ping Redis 做健康检查
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := rdb.Ping(ctx).Err(); err != nil {
+		log.Warnf("redis ping failed: %v, service will run without cache", err)
+	} else {
+		log.Info("redis connected successfully")
+	}
+
+	data := &Data{DB: db, RDB: rdb, HC: cache.NewHealthChecker()}
 	migrateModels(data.DB)
 	cleanup := func() {
 		log.Info("closing the data resources")
 		sql, _ := data.DB.DB()
 		sql.Close()
+		_ = data.RDB.Close()
 	}
 	return data, cleanup, nil
 }
@@ -98,4 +117,9 @@ func seedAdmin(db *gorm.DB) {
 		admin := &model.Admin{Username: "admin", Password: "admin"}
 		db.Create(admin)
 	}
+}
+
+// NewHealthChecker 从 Data 中提取健康检查器
+func NewHealthChecker(data *Data) *cache.HealthChecker {
+	return data.HC
 }
