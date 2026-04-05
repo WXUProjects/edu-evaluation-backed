@@ -12,30 +12,50 @@ import (
 	"gorm.io/gorm"
 )
 
-// ProviderSet is data providers.
+// ProviderSet 数据层 Wire 依赖注入提供者集合
 var ProviderSet = wire.NewSet(
 	NewData,
 	NewDataDB,
 	NewDataRDB,
 )
 
-// Data .
+// Data 数据层上下文，持有数据库和 Redis 连接
 type Data struct {
 	DB  *gorm.DB
 	RDB *redis.Client
 }
 
-// NewDataDB 从 Data 中提取 DB
+// NewDataDB 从 Data 中提取 GORM 数据库连接
+//
+// 参数:
+//   - data *Data 数据层上下文
+//
+// 返回值:
+//   - *gorm.DB
 func NewDataDB(data *Data) *gorm.DB {
 	return data.DB
 }
 
-// NewDataRDB 从 Data 中提取 RDB
+// NewDataRDB 从 Data 中提取 Redis 客户端
+//
+// 参数:
+//   - data *Data 数据层上下文
+//
+// 返回值:
+//   - *redis.Client
 func NewDataRDB(data *Data) *redis.Client {
 	return data.RDB
 }
 
-// NewData .
+// NewData 创建数据层上下文，初始化数据库和 Redis 连接，并执行自动迁移
+//
+// 参数:
+//   - c *conf.Data 数据配置
+//
+// 返回值:
+//   - *Data 数据层上下文
+//   - func() 清理函数，用于关闭数据库连接
+//   - error 初始化失败时返回错误
 func NewData(c *conf.Data) (*Data, func(), error) {
 	data := &Data{DB: gorm2.InitGorm(c), RDB: redis2.InitRedis(c)}
 	migrateModels(data.DB)
@@ -47,7 +67,10 @@ func NewData(c *conf.Data) (*Data, func(), error) {
 	return data, cleanup, nil
 }
 
-// migrateModels 合并
+// migrateModels 自动迁移所有数据模型到数据库
+//
+// 参数:
+//   - db *gorm.DB 数据库连接
 func migrateModels(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&model.Admin{},
@@ -64,7 +87,10 @@ func migrateModels(db *gorm.DB) {
 	seedAdmin(db)
 }
 
-// seedAdmin 插入默认管理员账号
+// seedAdmin 当管理员表为空时插入默认管理员账号（admin/admin）
+//
+// 参数:
+//   - db *gorm.DB 数据库连接
 func seedAdmin(db *gorm.DB) {
 	var count int64
 	db.Model(&model.Admin{}).Count(&count)

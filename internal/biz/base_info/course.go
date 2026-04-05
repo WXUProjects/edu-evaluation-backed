@@ -1,3 +1,4 @@
+// Package base_info 提供基础信息（课程、学生、教师）的业务逻辑层实现。
 package base_info
 
 import (
@@ -9,18 +10,20 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-// CourseUseCase 课程信息业务用例
+// CourseUseCase 课程信息业务用例，负责课程数据的导入、删除等业务操作。
 type CourseUseCase struct {
 	courseDal *dal.CourseDal
 }
 
-// courseItem 课程分组键
+// courseItem 课程分组键，用于按课程名称和班级名称进行分组。
 type courseItem struct {
 	courseName string
 	className  string
 }
 
-// Import 从Excel文件导入课程数据
+// Import 从 Excel 文件导入课程数据。
+// 解析 Excel 中的 Sheet1，按课程名称和班级名称分组后批量创建课程并关联学生。
+// 返回导入过程中的错误信息汇总字符串；无错误时返回空字符串。
 func (c CourseUseCase) Import(f multipart.File) string {
 	list, err := excelize.OpenReader(f)
 	if err != nil {
@@ -56,12 +59,15 @@ func (c CourseUseCase) Import(f multipart.File) string {
 	return logMsg
 }
 
-// DeleteCourse 删除课程
+// DeleteCourse 根据课程 ID 删除指定课程。
+// 参数 id 为目标课程的主键 ID。
+// 删除成功返回 nil，否则返回对应的错误。
 func (c CourseUseCase) DeleteCourse(id uint) error {
 	return c.courseDal.DeleteCourse(id)
 }
 
-// NewCourseUseCase 创建课程信息业务用例实例
+// NewCourseUseCase 创建并返回 CourseUseCase 实例。
+// 参数 courseDal 为课程数据访问层对象。
 func NewCourseUseCase(courseDal *dal.CourseDal) *CourseUseCase {
 	return &CourseUseCase{courseDal: courseDal}
 }
